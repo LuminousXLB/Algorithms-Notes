@@ -1,0 +1,57 @@
+\usepackage[UTF8]{ctex}
+\usepackage{fontspec}
+
+\setCJKmainfont{SourceHanSerifCN-Regular}[
+    Path = fonts/ ,
+    Extension = .otf ,
+    UprightFont = SourceHanSerifCN-Regular,
+    BoldFont = SourceHanSerifCN-Bold,
+]
+
+\setCJKsansfont{SourceHanSansCN-Regular}[
+    Path = fonts/ ,
+    Extension = .otf ,
+    UprightFont = SourceHanSansCN-Regular,
+    BoldFont = SourceHanSansCN-Bold,
+]
+
+\usepackage{fullpage}
+\usepackage{multicol}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{comment}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\newtheoremstyle{example}% name
+{3pt}% Space above
+{3pt}% Space below
+{}% Body font
+{}% Indent amount (empty = no indent, \parindent = para indent)
+{\normalfont}% Thm head font
+{}% Punctuation after thm head
+{1em}% Space after thm head: " " = normal interword space;
+% \newline = linebreak
+{\textsf{\thmname{#1}\thmnumber{#2}\thmnote{#3}}}% Thm head spec (can be left empty, meaning `normal')
+
+\theoremstyle{example}
+\newtheorem{example}{例}
+
+\renewenvironment{proof}{\noindent\textsf{证明}\quad}{\hfill $\square$\par}
+\newtheorem{lemma}{引理}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textsf{输入:}}
+\renewcommand{\algorithmicensure}{\textsf{输出:}}
+
+\renewcommand{\solutiontitle}{}
+
+
