@@ -1,0 +1,165 @@
+\documentclass[answers]{exam}
+
+\input{premable.tex}
+
+\title{算法与复杂性 \quad 作业八}
+
+\author{516021910528 - SHEN Jiamin}
+\date{2020年4月9日}
+
+\begin{document}
+
+\maketitle
+
+\begin{questions}
+    \section{0409}\label{sec:0409}
+
+    \question $G=(V,E)$是一个无向图，每个顶点的度数都为偶数。
+    设计线性时间算法，给$G$中每条边一个方向，使每个顶点的入度等于出度。
+    （请先简单说明算法思想，再给出伪代码，然后证明其时间复杂性符合要求）
+
+    \begin{solution}
+        因为无向图每个顶点的度数都为偶数，所以该图是欧拉图，即一定存在欧拉回路能经过每一条边且每条边仅经过一次。
+        沿欧拉回路标记每一条边的方向，即可保证每个顶点的入度等于出度。
+    \end{solution}
+
+    \question 连连看游戏中用户可以把两个相同的图用线连到一起，如果连线拐的弯小于等于两个则表示可以消去。
+    设计算法，判断指定的两个图形能否消去。
+
+    \begin{solution}
+        分以下三种情况讨论：两个图案通过一条直线、两段折线、三段折线相连。
+
+        伪代码见算法\ref{0409:2:3}、算法\ref{0409:2:12}。
+    \end{solution}
+
+    % \begin{parts}
+    %     \part 设计算法，判断指定的两个图形能否消去。
+    %     \begin{solution}
+    %         分以下三种情况讨论：两个图案通过一条直线、两段折线、三段折线相连。
+
+    %         伪代码见算法\ref{0409:2:3}、算法\ref{0409:2:12}。
+    %     \end{solution}
+
+    %     \part 如果是求两个图形间的最少转弯次数呢？
+    %     \begin{solution}
+    %         {
+    %             \color{red}
+    %             blahblah
+    %         }
+    %     \end{solution}
+    % \end{parts}
+
+    \begin{algorithm}
+        \caption{判别两图案是否可以消除(3)}\label{0409:2:3}
+        \begin{algorithmic}[1]
+            \Require {矩阵$M[0..m+1][0..n+1]$，其中$M[1..m][1..n]$为游戏图案；矩阵上两个元素$M[r_1][c_1],C[r_2][c_2]$}
+            \Ensure {两元素是否可以消除}
+
+            \If {\Call{OneSegment}{$M, r_1, c_1, r_2, c_2$}}
+            \State \Return \textsf{True}
+            \ElsIf {\Call{TwoSegment}{$M, r_1, c_1, r_2, c_2$}}
+            \State \Return \textsf{True}
+            \ElsIf {\Call{ThreeSegment}{$M, r_1, c_1, r_2, c_2$}}
+            \State \Return \textsf{True}
+            \Else
+            \State \Return \textsf{False}
+            \EndIf
+            \Statex
+            \Procedure{Expands}{$M[0 \dots m+1 ][0 \dots n+1], row, col$}
+            \State 找到$d \le row \le u$，使得$M[d \dots u][col]$范围内除了$M[row][col]$全为空
+            \State 找到$l \le col \le r$，使得$M[row][l \dots r]$范围内除了$M[row][col]$全为空
+            \State \Return $(u,d,l,r)$
+            \EndProcedure
+            \Statex
+            \Procedure{ThreeSegment}{$M[0 \dots m+1 ][0 \dots n+1], r_1,c_1,r_2,c_2$}
+            \State $(u_1, d_1, l_1, r_1) \gets \Call{Expands}{M, r_1, c_1}, (u_2, d_2, l_2, r_2) \gets \Call{Expands}{M, r_2, c_2}$
+            \State $d \gets \max(d_1, d_2), u \gets \min(u_1, u_2), l \gets \max(l_1, l_2), r \gets \min(r_1, r_2)$
+
+            \For{$r \gets d$ to $u$ ($r \ne r_1 \wedge r \ne r_2$)}
+            \If{\Call{OneSegment}{$M, r, c_1, r, c_2$}}
+            \State \Return \textsf{True}
+            \EndIf
+            \EndFor
+
+            \For{$c \gets l$ to $r$ ($c \ne c_1 \wedge c \ne c_2$)}
+            \If{\Call{OneSegment}{$M, r_1, c, r_2, c$}}
+            \State \Return \textsf{True}
+            \EndIf
+            \EndFor
+
+            \State \Return \textsf{False}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{判别两图案是否可以消除(1)(2)} \label{0409:2:12}
+        \begin{algorithmic}[1]
+            \Procedure{OneSegment}{$M[0 \dots m+1 ][0 \dots n+1], r_1,c_1,r_2,c_2$}
+            \If{$r_1 = r_2$} \Comment{判断是否能通过一条水平线消除}
+            \For{$c \gets \min(c_1,c_2) + 1$ to $\max(c_1,c_2) - 1$}
+            \If {$\neg M[r_1][c].isEmpty$}
+            \State \Return \textsf{False}
+            \EndIf
+            \EndFor
+            \State \Return $\mathsf{True}$
+            \ElsIf {$c_1 = c_2$} \Comment{判断是否能通过一条竖直线消除}
+            \For{$r \gets \min(r_1,r_2) + 1$ to $\max(r_1,r_2) - 1$}
+            \If {$\neg M[r][c_1].isEmpty$}
+            \State \Return \textsf{False}
+            \EndIf
+            \EndFor
+            \State \Return $\mathsf{True}$
+            \Else \Comment{两图案不在同一条直线上}
+            \State \Return $\mathsf{False}$
+            \EndIf
+            \EndProcedure
+            \Statex
+            \Procedure{TwoSegment}{$M[0 \dots m+1 ][0 \dots n+1], r_1,c_1,r_2,c_2$}
+            \If {$\Call{OneSegment}{M, r_1, c_1, r_1, c_2} \wedge \Call{OneSegment}{M, r_2, c_2, r_1, c_2}$}
+            \State \Return \textsf{True}
+            \ElsIf {$\Call{OneSegment}{M, r_1, c_1, r_2, c_1} \wedge \Call{OneSegment}{M, r_2, c_2, r_2, c_1}$}
+            \State \Return \textsf{True}
+            \EndIf
+            \State \Return \textsf{False}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+
+    \question 证明任意连通无向图中必然存在一个点，删除该点不影响图的连通性。
+    用线性时间找到这个点。
+
+    \begin{solution}
+        以图中任意一节点为根节点做深度优先搜索，一定存在搜索到某个节点时，该节点的所有相邻节点都已经被标记了。
+        即该节点的所有相邻节点都可以从根节点通过不经过该节点的路径到达。
+        所以删除该节点一定不影响图的连通性。
+
+        进行深度优先搜索的时间复杂度为$O(|V|+|E|)$。
+        因为该算法不需要完成对整个图的遍历，所以该算法的时间复杂度不超过$O(|V|+|E|)$。
+
+        伪代码见算法\ref{0409:3}。
+    \end{solution}
+
+    \begin{algorithm}
+        \caption{寻找割点}\label{0409:3}
+        \begin{algorithmic}[1]
+            \Require {图$G=(V,E)$}
+            \Ensure {割点$v \in V$，使图中删除点$v$时不影响图的连通性}
+            \State $v \gets \Call{Select}{V}$ \Comment{任选一个节点作为根节点}
+            \State $v.marked \gets \mathsf{True}$ \Comment{标记已经搜索过$v_0$}
+            \Repeat
+            \State $continue \gets \mathsf{False}$
+            \For {$(v, w) \in E$}
+            \If { $\neg w.marked$} \Comment{如果还存在一个与$v$相邻的节点$w$未被标记}
+            \State $w.marked \gets \mathsf{True}$ \Comment{标记该点}
+            \State $v \gets w$
+            \State $continue \gets \mathsf{True}$ \Comment{从该点开始继续搜索}
+            \State \textbf{break}
+            \EndIf
+            \EndFor
+            \Until {$\neg continue$} \Comment{$continue$为\textsf{False}时，节点$v$不存在未被标记的邻点}
+            \State \Return $v$
+        \end{algorithmic}
+    \end{algorithm}
+\end{questions}
+\end{document}

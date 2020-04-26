@@ -1,0 +1,393 @@
+\documentclass[answers]{exam}
+% \documentclass{article}
+
+\input{premable.tex}
+
+\title{算法与复杂性 \quad 作业二}
+
+\author{516021910528 - SHEN Jiamin}
+\date{2020年3月5日}
+
+\begin{document}
+
+\maketitle
+
+\begin{questions}
+
+    \question 数列$1,2,3,4,5,10,20,40,\dots$，该数列开始是等差数列，第5项以后为等比数列，证明任意一个正整数都可表示为这个数列中的不同数之和。
+
+    \begin{solution}
+        \begin{parts}
+            \part{
+                \begin{lemma}
+                    对任意的$n \in \mathbb{N}^* , n < 2^k$，$n$可以表示为集合$\left\{ 2^i \mid 0 \leq i < k \right\}$中任意个不同数之和。
+                    \label{BinaryCase}
+                \end{lemma}
+
+                \begin{proof}
+                    定义集合$S_k$：
+                    \begin{enumerate}
+                        \item $\left\{ 2^i \mid 0 \leq i < k \right\} \subset S_k$
+                        \item 若$a \in \mathbb{N}^*$可表示为集合$\left\{ 2^i \mid 0 \leq i < k \right\}$中任意多个不同数之和，则$a \in S_k$
+                    \end{enumerate}
+                    考察集合$S_k$：
+                    \begin{enumerate}
+                        \item 当$k=1$时，$S_1 = \left\{ 1 \right\}$
+                        \item 当$k=2$时，$S_2 = \left\{ 1, 2, 3 \right\}$
+                        \item {
+                              假设当$k=n$时$S_n = \left\{ a \in \mathbb{N} \mid 1 \leq a < 2^{n} \right\}$ \\
+                              则当$k=n+1$时，
+                              \begin{align*}
+                                  S_{n+1} & = S_n \cup \left\{ 2^n \right\} \cup \left\{ 2^n + a \mid a \in S_n \right\}                                                                             \\
+                                          & = \left\{ a \in \mathbb{N} \mid 1 \leq a < 2^{n} \right\} \cup \left\{ 2^n \right\} \cup \left\{ a \in \mathbb{N} \mid 2^n + 1 \leq a < 2^{n+1} \right\} \\
+                                          & = \left\{a \in \mathbb{N} \mid 1 \leq a < 2^{n+1} \right\}
+                              \end{align*}
+                              }
+                    \end{enumerate}
+                    归纳可知$S_k = \left\{a \in \mathbb{N} \mid 1 \leq a < 2^{k} \right\}$，即引理\ref{BinaryCase}成立。
+                \end{proof}
+            }
+
+            \part{
+                原数列通项公式可表示为$$ a_i =
+                    \begin{cases}
+                        i,              & 1 \leq i < 5 \\
+                        5 \cdot 2^{i-5} & i \geq 5
+                    \end{cases} $$
+
+                对于任意正整数$ n \in \mathbb{N}^*$，
+                \begin{enumerate}
+                    \item {
+                          若$n\leq 5$，易知$n \in \left\{ a_i \right\}$，即由数列中的单个数即可表示。
+                          %   或$n\in \left\{5 \cdot 2^k \mid k \in \mathbb{N} \right\}$
+                          }
+                    \item {
+                          由引理\ref{BinaryCase}和整数加法的线性性可推知，
+                          $\forall n \in \mathbb{N}^* , 5 | n, n < 5 \cdot 2^k$，$n$可以表示为集合$\left\{ 5 \cdot 2^i \mid 0 \leq i < k \right\}$中任意个不同数之和。所以若$5|n$，则$n$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和。\label{timesOfFive}
+                          }
+                          % \item {
+                          %       。由\ref{timesOfFive}可知。所以
+                          %       }
+                \end{enumerate}
+                $$\mathbb{N}^* = \left\{ 5x+y \mid x \in \mathbb{N}, y\in \left\{1,2,3,4 \right\} \right\}$$
+                其中$5x$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和；又$n \in \left\{ a_i \mid 1 \leq i < 5 \right\}$。归纳可知，任意正整数可以表示为$\left\{ a_i \right\}$中任意个不同数之和。
+            }
+        \end{parts}
+    \end{solution}
+    \begin{solution}
+        \begin{proof}
+            该数列通项公式可表示为$$ a_i =
+                \begin{cases}
+                    i,              & 1 \leq i < 5 \\
+                    5 \cdot 2^{i-5} & i \geq 5
+                \end{cases} $$
+
+            对任意的$n \in \mathbb{N}^*$，存在唯一一组$(t,b,q)$满足$t\in \mathbb{N}, b\in \left\{0,1 \right\}, q \in \left\{ 1,2,3,4\right\}$，使得$$n = 5t+bq$$
+
+            $t$有唯一的二进制表示，使$t = \sum_{k}{b_k \cdot 2^k}$，其中$b_k \in \left\{0,1\right\}$
+
+            即\begin{align*}
+                n = 5 \cdot \sum_{k}{b_k \cdot 2^k} + bq
+                = \sum_{k}{b_k \cdot (5 \cdot 2^k)} + bq
+            \end{align*}
+
+            因为$b_k, b \in \left\{0,1\right\}$，不可能有重复的加数。又由题可知，
+            \begin{align*}
+                \left\{5 \cdot 2^k \right\} & = \left\{a_i \mid i \geq 5 \right\}     \\
+                \left\{q \right\}           & = \left\{a_i \mid 1 \leq i < 5 \right\}
+            \end{align*}
+            所以任意的$n \in \mathbb{N}^*$可以表示为$\left\{ a_i \right\}$中任意多不同数之和。
+        \end{proof}
+    \end{solution}
+
+    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \question 广场上站着99个间谍，间谍与间谍之间的距离互不相等，每个间谍都盯着离自己最近的那个间谍看，证明总存在一个没被人盯着的间谍。
+
+    \begin{solution}
+
+        间谍与监视关系构成一张有向图，图中每个节点的出度为1。
+
+        该图中不可能存在一个边数大于2的闭环（即$v_0 \rightarrow v_1 \rightarrow \dots \rightarrow v_n \rightarrow v_0 $）。
+        若存在这样一个闭环，则一定存在闭环上的一条边$(v_i, v_{i+1})$是环上所有边中最短的，所以$v_i, v_{i+1}$必互相监视，与假设不符。
+        所以该图中不可能存在一个边数大于2的闭环。
+
+        若无法形成闭环，由于每个节点出度为1，其每个连通子图只能存在以下情况
+        \begin{itemize}
+            \item 两节点相互监视，且无其他节点监视这两个节点。
+            \item 链形$v_0 \rightarrow v_1 \rightarrow \dots \rightarrow v_n$。
+                  由于不可能存在闭环，要使$v_n$出度为1必有$v_n \rightarrow v_{n-1}$，此时必然存在$v_0$的入度为0。
+            \item 星形（即$v_1 \rightarrow v_0, v_2 \rightarrow v_0,\dots $）。
+                  由于$v_0$出度为1，只能与其中一个节点互相监视，周围其他节点的入度均为$0$。
+        \end{itemize}
+
+        当有99个间谍时，即使两两一对互相监视，也一定存在1个节点无法成对。
+        因此一定存在星形或链形结构，使存在至少一个人没有被盯着。
+
+    \end{solution}
+
+    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \question 有10个海盗抢得了100枚金币，每个海盗都能够很理智地判断自己的得失，他们决定这样分配金币：
+    \begin{enumerate}
+        \item 按照强壮与否排序，其中最强壮的人为10号，以此类推，最瘦小的人为1号。
+        \item 先由10号提出分配方案，然后由所有人表决，当且仅当\textbf{等于或多于半数人}（包括自己）同意时，方案才算被通过，否则他将被扔入大海喂鲨鱼；
+        \item 如果10号死了，将由9号提方案，其余的人表决，当且仅当\textbf{超过半数}（包括自己）同意时，方案才算通过，否则9号同样将被扔入大海喂鲨鱼；
+        \item 往下以此类推……
+    \end{enumerate}
+    海盗们都很精明，他们首先会尽量保住自己的命，其次在保住命的前提下都想分到尽可能多的金币，而且他们也很希望自己的同伴喂鲨鱼。
+
+    \begin{parts}
+        \part 假如你是那个1号海盗，你将怎样分配，才能既保住命，又能分到最多的金币？最多能分到多少呢？
+        \part 如果还是100枚金币，但海盗的数量是20，50，100，200，400又该怎么样呢？
+    \end{parts}
+
+
+    \begin{solution}
+        设有$n$个海盗时，$n$号海盗提出的方案中，$j$号海盗分得的金币数量为$c_n(j)$。
+
+        当仅剩两人（1、2号）时，无论2号提出怎样的方案，1号都会选择不同意从而把2号扔进大海并分得全部金币。
+        所以，当剩余三人时（1、2、3号），无论3号提出怎样的方案，2号都会同意3号的方案以避免出现上述情况。
+        因此，3号会提出一个$$
+            c_3(j) = \begin{cases}
+                100 & , j=3   \\
+                0   & , j=1,2
+            \end{cases}
+        $$的方案，2、3号海盗会同意这个方案。
+
+        在上述方案中，1、2号海盗都没有得到金币。
+        因此，当由4号海盗提出方案时，只要他分给1号或2号海盗1个金币，即可赢得其支持。如$$
+            c_4(j) = \begin{cases}
+                99 & , j=4   \\
+                1  & , j=2   \\
+                0  & , j=1,3 \\
+            \end{cases}
+        $$
+
+        当由5号海盗提出方案时，需要3人同意方可通过。
+        代价最小的方案为在$c_4$的基础上多分给1、3号各一个金币。即$$
+            c_5(j) = \begin{cases}
+                98 & , j=5   \\
+                1  & , j=1,3 \\
+                0  & , j=2,4
+            \end{cases}
+        $$
+
+        当由6号海盗提出方案时，需要3人同意即可通过。
+        代价最小的方案为$c_5$基础上分给2、4号一个金币。如$$
+            c_6(j) = \begin{cases}
+                98 & , j=6     \\
+                1  & , j=2,4   \\
+                0  & , j=1,3,5
+            \end{cases}
+        $$
+
+        \textsf{已知} \quad 当有$n$个海盗时，须有$
+            \left\lceil \frac{n}{2} \right\rceil = \begin{cases}
+                \frac{n+1}{2} & , n \text{为奇数} \\
+                \frac{n}{2}   & , n \text{为偶数}
+            \end{cases}
+        $个海盗支持方可通过方案。
+
+        \textsf{猜想} \quad 当$3 < n \leq 200$时， $n$号海盗提出如下方案可保住自己的命：$$
+            c_n(j) = \begin{cases}
+                101-\left\lceil \frac{n}{2} \right\rceil & , j=n                     \\
+                1                                        & , j<n , j+n \text{为偶数} \\
+                0                                        & , j<n , j+n \text{为奇数}
+            \end{cases}
+        $$
+
+        \begin{proof}
+            下面使用数学归纳法证明上述猜想。
+            \begin{enumerate}
+                \item 前已论述$n \leq 6$时的情况
+                \item {
+                      假设$n=k$时猜想成立
+                      \begin{itemize}
+                          \item {
+                                若$k$为奇数，则$k$号海盗可分得$101-\frac{k+1}{2}$个金币。
+                                且有$\frac{k+1}{2}-1$个奇数号海盗获得了$1$个金币，$\frac{k-1}{2}$个偶数号海盗没有获得金币。
+                                }
+                          \item {
+                                若$k$为偶数，则$k$号海盗可分得$101-\frac{k}{2}$个金币。
+                                且有$\frac{k}{2}-1$个偶数号海盗获得了$1$个金币，$\frac{k}{2}$个奇数号海盗没有获得金币。
+                                }
+                      \end{itemize}
+
+                      则当$n=k+1$时
+                      \begin{itemize}
+                          \item {
+                                若$k$为奇数，$k+1$为偶数。
+                                $k+1$号海盗须得到另外$\frac{k-1}{2}$个海盗的支持方可通过方案。
+                                因此，只需给$n=k$时没有分得金币的$\frac{k-1}{2}$个偶数号海盗分1个金币即可赢得他们的支持。
+                                即$k+1$为偶数时，$$
+                                    c_{k+1}(j) = \begin{cases}
+                                        100 - \frac{k-1}{2} = 101 - \lceil \frac{k+1}{2} \rceil & , j=k+1                  \\
+                                        1                                                       & , j<k+1, j \text{为偶数} \\
+                                        0                                                       & , j<k+1, j \text{为奇数}
+                                    \end{cases}
+                                $$
+                                }
+                          \item {
+                                若$k$为偶数，$k+1$为奇数。
+                                $k+1$号海盗须得到另外$\frac{k}{2}$个海盗的支持方可通过方案。
+                                因此，只需给$n=k$时没有分得金币的$\frac{k}{2}$个奇数号海盗分1个金币即可赢得他们的支持。
+                                即$k+1$为奇数时，$$
+                                    c_{k+1}(j) = \begin{cases}
+                                        100 - \frac{k}{2} = 101 - \lceil \frac{k+1}{2} \rceil & , j=k+1                  \\
+                                        1                                                     & , j<k+1, j \text{为奇数} \\
+                                        0                                                     & , j<k+1, j \text{为偶数}
+                                    \end{cases}
+                                $$
+                                }
+                      \end{itemize}
+                      }
+            \end{enumerate}
+            综合可知上述猜想成立。
+        \end{proof}
+
+        由此可知，
+        \begin{itemize}
+            \item 当$n=200$时，$
+                      c_{200}(j) = \begin{cases}
+                          1 & , j<200 , j \text{为偶数} \\
+                          0 & , j<200 , j \text{为奇数}
+                      \end{cases}
+                  $
+
+            \item 当$n=201$时，201号海盗必须获得除他自己以外的另外100名海盗的支持。
+                  因此，他须分给1-200号海盗中100名奇数号海盗各1枚金币，而他本人无法分得金币。
+
+            \item 当$n=202$时，202号海盗必须获得除他自己以外的另外100名海盗的支持。
+                  因此，他须分给1-200号海盗中100名偶数号海盗各1枚金币，而他本人无法分得金币。
+
+            \item 当$n=203$时，203号海盗必须获得除他自己以外的另外101名海盗的支持。
+                  但他只有100枚金币，无法获得101名海盗的支持。所以他的方案不可能通过。
+
+            \item 当$n=204$时，204号海盗必须获得除他自己以外的另外101名海盗的支持。
+                  由上述可知，203号海盗一定会支持204号海盗以保护自己。
+                  因此他只需在其他人中选100人，分给他们每人1个金币即可。
+
+            \item 当$n=205$时，205号海盗必须获得除他自己、100个金币能收买的100个海盗以外，另外2名海盗的支持。
+                  同理，当$n=206$、$n=207$时，方案都无法被通过。
+
+            \item 当$n=208$时，208号海盗必须获得除他自己、100个金币能收买的100个海盗以外，另外3名海盗的支持。
+                  205-207号海盗为保命也会支持208号海盗，因此208号海盗的方案会被通过。
+
+        \end{itemize}
+
+        \textsf{猜想} \quad 当$n>200$时，当且仅当$n = 200 + 2^k,k\in \mathbb{N}$时，存在可以通过的方案。
+
+        \begin{proof}
+            \begin{enumerate}
+                \item 由上述论述可知，当$k=0,1,2,3$，$n=201,202,204,208$时，存在可以通过的方案，且本人均无法得到金币。
+                \item {
+                      设$k \in \mathbb{N}^*$。
+                      \begin{itemize}
+                          \item 若$n=200+2k$时，存在一个可以通过的方案，即$100 + k$个海盗支持了方案。
+                                则当$n=201+2k$时，需要$101 + k$个海盗支持。
+                                除他自己和能用金币收买的100个海盗（共101人）以外，剩余$k$个人均会选择拒绝方案从而将他扔进大海。
+                          \item 若$n=200+2k$时，不存在一个可以通过的方案，即表示支持的海盗人数$\delta < 100 + k$。
+                                则当$n=201+2k$时，表示支持的海盗人数为$\delta + 1 \leq 100 + k$，不足$101 + k$个。
+                                方案仍然不会被通过。
+                      \end{itemize}
+                      所以当$n > 201$且$n$为奇数时，不存在能通过的方案。
+                      }
+                \item {
+                      假设$n=200+2^k$时，存在可以通过的方案。
+                      若$n = n' > 200+2^k$（由上述可知，$n'$定为偶数）时，也存在可以通过的方案，且$200+2^k < n < n'$时不存在可以通过的方案。
+                      则$200+2^k$号至$n'-1$号共$n'-1 - (200+2^k)$名海盗都会支持$n'$号海盗。
+                      因此若有$n'$名海盗时存在可以通过的方案，定有\begin{align*}
+                          \left\lceil \frac{n'}{2} \right\rceil & = 100 + 1 + (n'-1 - (200+2^k)) = n' - 2^k - 100 \\
+                          n'                                    & = 2n' - 2^{k+1} - 200                           \\
+                          n'                                    & = 200 + 2^{k+1}
+                      \end{align*}
+                      }
+            \end{enumerate}
+            归纳可得，上述猜想成立。
+        \end{proof}
+
+        \textsf{答} \quad
+        \begin{parts}
+            \part{
+                当$n=10$时，$
+                    c_{10}(j) = \begin{cases}
+                        96 & , j=n                    \\
+                        1  & , j<10 , j \text{为偶数} \\
+                        0  & , j<10 , j \text{为奇数}
+                    \end{cases}
+                $
+            }
+            \part{
+                当$n=20$时，$
+                    c_{20}(j) = \begin{cases}
+                        91 & , j=n                    \\
+                        1  & , j<20 , j \text{为偶数} \\
+                        0  & , j<20 , j \text{为奇数}
+                    \end{cases}
+                $
+
+                当$n=50$时，$
+                    c_{50}(j) = \begin{cases}
+                        76 & , j=n                    \\
+                        1  & , j<50 , j \text{为偶数} \\
+                        0  & , j<50 , j \text{为奇数}
+                    \end{cases}
+                $
+
+                当$n=100$时，$
+                    c_{100}(j) = \begin{cases}
+                        51 & , j=n                     \\
+                        1  & , j<100 , j \text{为偶数} \\
+                        0  & , j<100 , j \text{为奇数}
+                    \end{cases}
+                $
+
+                当$n=200$时，$
+                    c_{200}(j) = \begin{cases}
+                        1 & , j<200 , j \text{为偶数} \\
+                        0 & , j<200 , j \text{为奇数}
+                    \end{cases}
+                $
+
+                当$n=400$时，不存在自然数$k$使$200 + 2^k = 400$，因此400号海盗一定会被扔进大海。
+            }
+        \end{parts}
+    \end{solution}
+
+    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \question 以下利用数学归纳法证明“所有的马颜色相同”错在哪儿
+    \begin{enumerate}
+        \item 只有一匹马时，命题成立
+        \item {
+              设有$n$匹马时命题成立。
+              则当有$n+1$匹马$\{h_1,h_2,\dots,h_n,h_{n+1}\}$时， \\
+              由归纳假设，$\{h_1,h_2,\dots,h_n\}$这$n$匹马颜色相同，
+              $\{h_2,\dots,h_n,h_{n+1}\}$这$n$匹马的颜色相同， \\
+              即$h_1$和$h_{n+1}$这两匹马与$\{h_2,\dots,h_n\}$颜色相同， \\
+              所以$\{h_1,h_2,\dots,h_n,h_{n+1}\}$这$n+1$匹马的颜色是相同的
+              }
+    \end{enumerate}
+
+    \begin{solution}
+        考察由$n=1$推广至$n=2$时的情况：
+
+        两匹马$\left\{ h_1, h_2 \right\}$中，
+        由归纳假设$\left\{h_1\right\}$颜色相同，$\left\{h_2\right\}$颜色相同。
+        但$\left\{h_1\right\} \cap \left\{h_2\right\} = \Phi$，
+        所以不能推出$\left\{h_1,h_2\right\}$两匹马颜色相同。
+        因此不能由此归纳“出所有的马颜色相同”。
+    \end{solution}
+
+\end{questions}
+
+
+
+
+
+
+
+
+
+\end{document}

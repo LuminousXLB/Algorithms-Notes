@@ -1,0 +1,68 @@
+\documentclass{article}
+
+\input{premable.tex}
+
+\title{算法与复杂性 \quad 作业一}
+
+\author{516021910528 - SHEN Jiamin}
+\date{2020年3月2日}
+
+\begin{document}
+
+\maketitle
+
+用伪代码写出以下两个问题的算法，建议先用两三句话写出基本思想，再仿照课上最大公约数的例子写出伪代码
+
+\section{求解一元二次方程$ax^2+bx+c=0$}
+
+首先使用根的判别式判断方程根的情况，然后使用求根公式求解。
+
+\begin{algorithm}
+    \caption{求实系数一元二次方程的根}\label{QuadraticEquation}
+    \begin{algorithmic}[1]
+        \Require 实系数一元二次方程的系数$a,b,c$
+        \Ensure 方程的根$x_1,x_2$
+        \State $\Delta \gets b^2-4ac$ \Comment{根的判别式}
+        \If {$\Delta > 0$} \Comment{方程有两个不同的实数根}
+        \State $x_1 \gets \frac{-b + \sqrt{\Delta}}{2a}$
+        \State $x_2 \gets \frac{-b - \sqrt{\Delta}}{2a}$
+        \ElsIf {$\Delta = 0$} \Comment{方程有两个相等的实数根}
+        \State $x_{1,2} \gets -\frac{b}{2a}$
+        \ElsIf {$\Delta < 0$} \Comment{方程有两个不同的复数根}
+        \State $x_1 \gets \frac{-b + \bm{i}\sqrt{-\Delta}}{2a}$
+        \Comment{其中$\bm{i}^2=-1$}
+        \State $x_2 \gets \frac{-b - \bm{i}\sqrt{-\Delta}}{2a}$
+        \EndIf
+        \State \Return $x_1, x_2$
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\section{有一堆棋子，A和B两人轮流从中拿1-3个，A第一个拿，那么A如何确保自己不拿到最后一个棋子}
+
+若每次B拿$b_i$个棋子（$b_i \in [1,3], b_i \in \mathbb{N}$）之后，A都拿$a_{i+1} = 4 - b_{i}$个棋子，使$b_i + a_{i+1} = 4$，则最后剩余棋子的个数可以认为与B的决策无关。
+
+要保证A不拿到最后一个棋子，则A最后一次拿取之后必须只剩1个棋子。
+否则，B可以拿取若干棋子使剩余棋子个数为1，A将不得不拿到最后一个棋子。
+
+由此可知，只要A在每一步拿取棋子时，都尽力保证剩余棋子的个数$N$满足$N \equiv 1 \bmod 4$即可。
+
+注：A的策略只依赖于其决策时的状态。既不依赖于历史状态，也不依赖于B的决策细节。
+
+\begin{algorithm}
+    \caption{巴什博弈}\label{VariedBashGame}
+    \begin{algorithmic}[1]
+        \Require 轮到A拿棋子时，剩余棋子的个数$n$
+        \Ensure A本次拿取棋子的个数
+        \State $take \gets [(n-1) \bmod 4]$
+        \If {$take > 0$}
+        \State \Return $take$ \Comment{A此次拿$take$个棋子，可满足前述条件}
+        \Else
+        \State \Return $1$ \Comment{A不可能通过此次拿取保证前述条件，可随意拿若干棋子}
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+
+\end{document}
