@@ -1,0 +1,259 @@
+\documentclass[answers]{exam}
+
+\input{premable.tex}
+
+\title{算法与复杂性 \quad 作业十二}
+
+\author{516021910528 - SHEN Jiamin}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{questions}
+    \section{0430}\label{sec:0430}
+
+
+    \question 已知$n$个矩形，这些矩形的边都平行于坐标轴
+    \begin{parts}
+        \part 求出这些矩形的交集
+        \begin{solution}
+            求两个矩形的交集所需时间为$O(1)$。
+            任取两个求交集，求得的交集再与下一个矩形求交集即可。
+            该交集若存在则仍然是一个矩形。
+
+            \textbf{伪代码见算法\ref{alg:0430:1-1}}
+        \end{solution}
+
+        \begin{algorithm}[!ht]
+            \caption{矩形交集}\label{alg:0430:1-1}
+            \begin{algorithmic}[1]
+                \Require {一组矩形$R = \left\{ \langle y_u, x_l, y_b, x_r \rangle \right\}$} \Comment{矩形的四条边，按上左下右的顺序}
+                \Ensure {这些矩形的交集$\langle Y_u, X_l, Y_b, X_r \rangle$} \Comment{若不存在交集，则这四条边不构成矩形}
+                \State $\langle Y_u, X_l, Y_b, X_r \rangle \gets \Call{Select}{R}$ \Comment{从集合中任选一个矩形作为当前的交集}
+                \For { $\langle y_u, x_l, y_b, x_r \rangle$ in $R$ }
+                \State $Y_u \gets \min(Y_u, y_u), Y_d \gets \max(Y_d, y_d)$
+                \State $X_l \gets \max(X_l, x_l), X_r \gets \min(X_r, x_r)$
+                \If{$Y_u \le Y_d \vee X_l \ge X_r$}
+                \State \textbf{break}
+                \EndIf
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+
+        \part 求出这些矩形能够覆盖的面积
+        \begin{solution}
+            使用扫描线算法。
+
+            事件列表为所有矩形的竖直边。
+            扫描线状态为当前扫描线穿过的所有矩形。
+
+            当扫描线状态发生变化时，计算当前事件点到上一个事件点之间的有效面积，然后更新当前扫描线上的有效高度。
+
+            \textbf{伪代码见算法\ref{alg:0430:1-2}}
+        \end{solution}
+
+        \begin{algorithm}[!ht]
+            \caption{矩形并集面积}\label{alg:0430:1-2}
+            \begin{algorithmic}[1]
+                \Require {一组矩形$R = \left\{ \langle y_u, x_l, y_b, x_r \rangle \right\}$} \Comment{矩形的四条边，按上左下右的顺序}
+                \Ensure {这些矩形的覆盖面积}
+                \State 对所有矩形按两条竖直边的横坐标建最小化堆$events$，有元素$2n$个 \Comment{$O(n)$}
+                \State $state \gets \Call{RedBlackTree.New}{}$
+                \State $xlast \gets \min(x), ylast \gets 0$
+                \State $space \gets 0$
+                \For { $e$ in $events$ }
+                \State $x, y_u, y_d \gets \Call{Extract}{e}$
+                \State $space \gets space + (x-xlast) \times ylast$
+                \If {$x_l$ in $e$} \Comment{遇到左边，出现一个新的矩形}
+                \State $\Call{RBTree.Insert}{state, \mathsf{key=}y_u, \mathsf{value=}(y_u, \mathsf{up})}$
+                \State $\Call{RBTree.Insert}{state, \mathsf{key=}y_b, \mathsf{value=}(y_b, \mathsf{bottom})}$
+                \ElsIf {$x_r$ in $e$} \Comment{遇到右边，这个矩形消失}
+                \State $\Call{RBTree.Remove}{state, \mathsf{key=}y_u}$
+                \State $\Call{RBTree.Remove}{state, \mathsf{key=}y_b}$
+                \EndIf
+
+                \State $xlast \gets x, ylast \gets 0$ \Comment{更新当前的有效高度}
+                \State $current \gets \Call{Stack.New}{}$
+                \For {$(y, type)$ in $state$}
+                \If {$type = \mathsf{up}$}
+                \State $\Call{Stack.Push}{current, y}$
+                \ElsIf {$type = \mathsf{bottom}$}
+                \State $ytop \gets \Call{Stack.Pop}{current}$
+                \If {\Call{Stack.empty}{}}
+                \State $ylast \gets ylast + (y - ytop)$
+                \EndIf
+                \EndIf
+                \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+    \end{parts}
+
+    \question 求$n!$包含质因子$p$的数量，例如$6！$含有4个2，2个3和1个5。
+    并给出算法的时间复杂性
+
+    \begin{solution}
+        \textbf{伪代码见算法\ref{alg:0430:2}}
+
+        时间复杂度为$O(n)$
+    \end{solution}
+
+    \begin{algorithm}[!ht]
+        \caption{质因子数量}\label{alg:0430:2}
+        \begin{algorithmic}[1]
+            \Require {正整数$n$，素数$p$}
+            \Ensure {$n!$包含质因子$p$的数量$C$}
+            \State $cnt[1 \dots n] \gets \left\{0\right\}$
+            \State $C \gets 0$
+            \For { $k \gets p$ up to $n$ }
+            \If { $k \equiv 0 \bmod p$ }
+            \State $cnt[k] \gets cnt[k/p] + 1$
+            \State $C \gets C + cnt[k]$
+            \EndIf
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
+
+    \question 设Fibonacci数列的定义为：
+    \[
+        F(n) = \begin{cases}
+            1             & , n=1,2 \\
+            F(n-1)+F(n-2) & , n > 2
+        \end{cases}
+    \]
+    证明每个大于$2$的整数$n$都可以写成至多$\log{n}$个Fibonacci数之和，并设计算法对于给定的$n$寻找这样的表示方式
+    \begin{solution}
+        首先设计用若干Fibonacci数之和表示给定大于$2$的整数$n$的算法，
+        并由此证明每个大于$2$的整数$n$都可以写成Fibonacci数之和。
+        然后证明在这样的表示中，使用的Fibonacci数至多有$\log_2{n}$个。
+
+        对于一个大于$2$的整数$n$，若$n$是Fibonacci数，则命题显然成立。
+        若$n$不是Fibonacci数，则一定存在一个$m(m>2)$，使得\[
+            F(m) < n < F(m+1)
+        \]
+        又\[
+            F(m+1) = F(m) + F(m-1)
+        \]
+        所以\[
+            0 < n - F(m) < F(m-1)
+        \]
+
+        不妨设$n' = n - F(m)$。
+        若$n'$是Fibonacci数，则$n = F(m) + n'$表示成了两个Fibonacci数之和。
+        否则若$n' > 2$，则令$n=n'$，重复上述步骤，直到$0 < n' \le 2$。
+        此时$n'=1$或$2$仍然是Fibonacci数。
+
+        所以每个大于$2$的整数$n$都可以用这种算法写成若干个Fibonacci数之和。
+
+        \textbf{伪代码见算法\ref{alg:0430:3}}
+
+        注意到\[
+            F(m') < n' < F(m' + 1) \le F(m-1) < F(m) < n < F(m-1)
+        \]
+        所以每个Fibonacci数至多使用一次，且不会有连续两个Fibonacci出现在结果中。
+
+        又不超过$n$的最大Fibonacci数为$F(m-2)$，即\[
+            \frac{F(m)}{F(m')}
+            \ge \frac{F(m)}{F(m-2)}
+            = \frac{F(m-1) + F(m-2)}{F(m-2)} = 2 + \frac{F(m-3)}{F(m-2)}
+            \ge 2
+            \quad (m \ge 3)
+        \]
+
+        即结果中相邻两个Fibonacci数之间的倍数一定超过$2$。
+        所以一定不超过$\log_2{n}$个。
+
+    \end{solution}
+
+    \begin{algorithm}[!ht]
+        \caption{Fibonacci表示}\label{alg:0430:3}
+        \begin{algorithmic}[1]
+            \Require {正整数$n$}
+            \Ensure {若干个Fibonacci数$repr$，其和为$n$}
+            \State $repr \gets \Call{Vector.New}{}$
+            \State $Fib \gets \Call{Stack.New}{}$
+            \State $\Call{Stack.Push}{Fib, 1}$
+            \State $last \gets 1$
+            \Repeat
+            \State $next \gets last + \Call{Stack.top}{Fib}$
+            \State $\Call{Stack.Push}{Fib, last}$
+            \State $last \gets next$
+            \Until {$last > n$}
+            \Repeat
+            \State $next \gets \Call{Stack.Pop}{Fib}$
+            \If {$n \ge next$}
+            \State $\Call{Vector.PushBack}{repr, next}$
+            \State $n \gets n - next$
+            \EndIf
+            \Until {$n = 0$}
+        \end{algorithmic}
+    \end{algorithm}
+
+    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section{0507}\label{sec:0507}
+
+    \question 设有复数$x=a+b \bm i$和$y=c+d \bm i$，设计算法，只用3次乘法计算乘积$xy$
+    \begin{solution}
+        \[
+            xy = (a+b \bm i) (c+d \bm i) = (ac-bd) + (ad+cb) \bm i
+        \]
+        \begin{enumerate}
+            \item $A = ad                             $
+            \item $B = bc                             $
+            \item $C = (a+b)(c-d) = ac - ad + bc - bd $
+        \end{enumerate}
+        \begin{align*}
+            ac-bd & = C + A - B \\
+            ad+cb & = A + B
+        \end{align*}
+    \end{solution}
+
+    \question 设$P$是一个$n$位十进制正整数。
+    如果将$P$划分为$k$段，则可得到$k$个正整数，这$k$个正整数的乘积称为$P$的一个$k$乘积。
+    \begin{parts}
+        \part 求出$1234$的所有$2$乘积
+        \begin{solution}
+            \begin{align*}
+                1 \times 234 & = 234  \\
+                12 \times 34 & =  408 \\
+                123 \times 4 & =  492
+            \end{align*}
+        \end{solution}
+
+        \part 对于给定的$P$和$k$，求出$P$的最大$k$乘积的值
+        \begin{solution}
+            使用动态规划求解。
+            设$Num(n, i)$是整数$n$的最低$i$位构成的数。
+            设$Prod(n,k)$是整数$n$的最大$k$乘积。
+            则\[
+                Prod(n,k) = \begin{cases}
+                    n                                           & , k = 1 \\
+                    Num(n,i) \cdot \max_{i} Prod(Num(n,i),k-1) & , k > 1
+                \end{cases}
+            \]
+
+
+        \end{solution}
+    \end{parts}
+
+    \question 分析在一般微机上如何计算二项式系数$C_n^k$
+    \begin{solution}
+        \begin{algorithmic}[1]
+            \Require {正整数$n,k$}
+            \Ensure {$C_n^k$}
+            \State $result \gets 1$
+            \State $k \gets \min(k, n-k)$
+            \For {$i \gets 1$ to $k$}
+            \State $result \gets result \times (n-i+1)$
+            \State $result \gets result \div i$
+            \EndFor
+            \State \Return $result$
+        \end{algorithmic}
+    \end{solution}
+
+
+\end{questions}
+
+\end{document}
