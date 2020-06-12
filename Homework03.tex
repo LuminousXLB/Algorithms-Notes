@@ -13,33 +13,38 @@
 
 \begin{questions}
 
-    \question $k$为正常数，证明$\log_m{n} = o(n^k)$
-
+    \question $k$为正常数，证明$\log{n} = o(n^k)$
     \begin{solution}
         \begin{proof}
-            \begin{enumerate}
-                \item 当$0 < m < 1$时，$\forall c > 0, n > 1, k > 0$ $$
-                          \log_m{n} < 0 < c n^k
-                      $$
-                \item 当$m > 1$时，令\begin{align*}
-                          f(x)  & = \frac{\log_m{x}}{x^k}             \\
-                          f'(x) & = -\frac{k}{\ln m}\frac{1}{x^{k+2}}
-                      \end{align*}
-                      由$k>0$，$\ln m>0$可知，当$x>0$时，$f'(x) < 0$，$f(x)$单调递减
-
-                      $\forall c > 0, \exists N = m^c > 0$，使得当$n > N$时 $$
-                          f(n) < f(N) =\frac{\log_m{m^c}}{m^{ck}} = \frac{c}{m^{ck}}
-                      $$
-                      由$ck>0$，$m>1$可知，$m^{ck} > 1$
-                      \begin{align*}
-                          c \cdot m^{ck} & > c                                                      \\
-                          c              & > \frac{c}{m^{ck}} = f(N) > f(n) = \frac{\log_m{n}}{n^k} \\
-                          \log_m{n}      & < c n^k
-                      \end{align*}
-                      所以$$\log_m{n} = o(n^k)$$
-            \end{enumerate}
+        只须证$\lim_{n \rightarrow + \infty} \frac{f(n)}{g(n)} = 0 $
         \end{proof}
     \end{solution}
+
+    % \begin{solution}
+    %     \begin{proof}
+    %         \begin{enumerate}
+    %             \item 当$0 < m < 1$时，$\forall c > 0, n > 1, k > 0$ $$
+    %                       \log_m{n} < 0 < c n^k
+    %                   $$
+    %             \item 当$m > 1$时，令\begin{align*}
+    %                       f(x)  & = \frac{\log_m{x}}{x^k}             \\
+    %                       f'(x) & = \frac{1-k \ln{x}}{ x^{k+1} \ln{m} }
+    %                   \end{align*}
+    %                   由$k>0$，$\ln m>0$可知，当$x>0$时，$f'(x) < 0$，$f(x)$单调递减
+
+    %                   $\forall c > 0, \exists N = m^c > 0$，使得当$n > N$时 $$
+    %                       f(n) < f(N) =\frac{\log_m{m^c}}{m^{ck}} = \frac{c}{m^{ck}}
+    %                   $$
+    %                   由$ck>0$，$m>1$可知，$m^{ck} > 1$
+    %                   \begin{align*}
+    %                       c \cdot m^{ck} & > c                                                      \\
+    %                       c              & > \frac{c}{m^{ck}} = f(N) > f(n) = \frac{\log_m{n}}{n^k} \\
+    %                       \log_m{n}      & < c n^k
+    %                   \end{align*}
+    %                   所以$$\log_m{n} = o(n^k)$$
+    %         \end{enumerate}
+    %     \end{proof}
+    % \end{solution}
 
     \newpage
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
