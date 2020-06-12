@@ -4,3 +4,9 @@
 **/*.out
 **/*.synctex
 **/*.synctex.gz
+**/*.fdb_latexmk
+**/*.fls
+**/*.toc
+**/*.xdv
+**/*.pygstyle
+**/*.pygtex
