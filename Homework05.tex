@@ -1,19 +1,6 @@
-\documentclass[answers]{exam}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业五}
-
-\author{516021910528 - SHEN Jiamin}
-\date{2020年3月16日}
-
-\begin{document}
-
-\maketitle
-
+\section{0316}
 \begin{questions}
 
-    \section{0316}
 
     \question 求解递推关系$$T(n) = n + \sum_{i=1}^{n-1}{T(i)}$$其中$T(1)=1$
     \begin{solution}
@@ -40,7 +27,7 @@
         $$
     \end{solution}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
     \question 在寻找一对一映射问题中，算法结束时集合S是否可能为空集？请证明你的结论。
 
@@ -88,9 +75,10 @@
         \end{proof}
     \end{solution}
 
+\end{questions}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \section{0319}
+\section{0319}
+\begin{questions}
 
     \question 有A、B、C三个桩子，A上放有$n$个不同大小的圆盘，按大小递减顺序自下而上。
 
@@ -183,7 +171,7 @@
         \end{parts}
     \end{solution}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
     \question 课上的最大连续子序列是指和最大，如果要求是积最大呢？
 
@@ -250,7 +238,7 @@
         \end{algorithm}
     \end{solution}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
     \question 背包问题中如果各种大小的物品的数量不限，那么如何知道背包是否能够恰好放满
 
@@ -277,20 +265,20 @@
                 \State $P[0..n][0..K] \gets \left\{ \mathsf{false} \right\}$
                 \State $P[0][0] \gets \mathsf{true}$
                 \For{$k=0$ to $K$}
-                    \For{$i=1$ to $n$}
-                        \If{$P[i-1][k] = \mathsf{true}$}
-                            \State $P[i][k] \gets \mathsf{true}$
-                        \Else
-                            \State $r \gets \left[ k \bmod s[i] \right]$
-                            \While {$r < k$}
-                                \If{$P[i][r] = \mathsf{true}$}
-                                    \State $P[i][k] \gets \mathsf{true}$
-                                    \State \textbf{break}
-                                \EndIf
-                                \State $r \gets r + k$
-                            \EndWhile
-                        \EndIf
-                    \EndFor
+                \For{$i=1$ to $n$}
+                \If{$P[i-1][k] = \mathsf{true}$}
+                \State $P[i][k] \gets \mathsf{true}$
+                \Else
+                \State $r \gets \left[ k \bmod s[i] \right]$
+                \While {$r < k$}
+                \If{$P[i][r] = \mathsf{true}$}
+                \State $P[i][k] \gets \mathsf{true}$
+                \State \textbf{break}
+                \EndIf
+                \State $r \gets r + k$
+                \EndWhile
+                \EndIf
+                \EndFor
                 \EndFor
             \end{algorithmic}
         \end{algorithm}
@@ -298,4 +286,3 @@
     \end{solution}
 
 \end{questions}
-\end{document}

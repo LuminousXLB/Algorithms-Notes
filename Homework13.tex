@@ -1,19 +1,5 @@
-\documentclass[answers]{exam}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业十三}
-
-\author{516021910528 - SHEN Jiamin}
-\date{\today}
-
-\begin{document}
-
-\maketitle
-
+\section{0511}\label{sec:0511}
 \begin{questions}
-    \section{0511}\label{sec:0511}
-
     \question 设计算法求出$n$个矩阵$M_1, M_2, \dots ,M_n$相乘最多需要多少次乘法，请给出详细的算法描述和时间复杂性
 
     \begin{solution}
@@ -87,10 +73,10 @@
             \item 当$d = 2^k$时，
                   \begin{align*}
                       \pT{2^k}
-                      = & 2 \pT{ 2^{k-1} } + \pO{ (k-1)2^{k-1} }                         \\
-                      = & 2^2 \pT{ 2^{k-2} } + \pO{ 2(k-2) 2^{k-2} +(k-1) 2^{k-1} }      \\
-                      = & 2^2 \pT{ 2^{k-2} } + \pO{ \pb{ (k-2)+(k-1) } 2^{k-1} }         \\
-                      = & 2^{k-1} \pT{2} + \pO{ \sum_{i=1}^{k-1} (k-i) 2^{k-1} }         \\
+                      = & 2 \pT{ 2^{k-1} } + \pO{ (k-1)2^{k-1} }                    \\
+                      = & 2^2 \pT{ 2^{k-2} } + \pO{ 2(k-2) 2^{k-2} +(k-1) 2^{k-1} } \\
+                      = & 2^2 \pT{ 2^{k-2} } + \pO{ \pb{ (k-2)+(k-1) } 2^{k-1} }    \\
+                      = & 2^{k-1} \pT{2} + \pO{ \sum_{i=1}^{k-1} (k-i) 2^{k-1} }    \\
                       = & 2^{k-1} + \pO{ k^{2} 2^{k-1} } = \pO{ d \cdot \log^2 d }
                   \end{align*}
             \item 当$d = 2^k - 1$时，记$u_k = 2^k - 1$，且有$u_k - 1 = 2u_{k-1}$
@@ -176,9 +162,10 @@
     \end{algorithm}
 
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \section{0514}\label{sec:0514}
+\end{questions}
 
+\section{0514}\label{sec:0514}
+\begin{questions}
     \question 输入是由数轴上的区间所组成的集合，这些区间由它们的两个端点表示。
     设计$O(n \log n)$算法识别所有包含在集合中其它某个区间的区间。
     这个问题与二维平面极大点问题有什么关系
@@ -377,5 +364,3 @@
     \end{algorithm}
 
 \end{questions}
-
-\end{document}

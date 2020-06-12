@@ -1,16 +1,3 @@
-\documentclass[answers]{exam}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业九}
-
-\author{516021910528 - SHEN Jiamin}
-\date{\today}
-
-\begin{document}
-
-\maketitle
-
 \section{0413}\label{sec:0413}
 \begin{questions}\label{qset:0413}
 
@@ -46,7 +33,6 @@
         \end{algorithm}
     \end{solution}
 
-    \newpage
 
     \question 设$G$是有向非循环图，其所有路径最多含$k$条边。
     设计线性时间算法，将所有顶点分为$k+1$组，每一组中任意两个点之间不存在路径。
@@ -107,7 +93,6 @@
 
 \end{questions}
 
-% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{0416}\label{sec:0416}
 \begin{questions}\label{qset:0416}
@@ -151,7 +136,7 @@
         当$v$是叶子节点时，$f(v) = f(v) = 0$；
         所以当$v$的所有子节点都是叶子节点时，$f(v) = f(v, 1) = 1$。
         对树做一次后序遍历，并按照上述规则计算出所有节点的$f(v,0)和f(v,1)$即可。
-        
+
         每个节点被访问两次（下行入栈一次，上行出栈一次）；计算$f$时比较的情况数等于该节点的度数，所有节点的度数和为$2|E|$。
         所以算法的时间复杂度为$O(|V|+|E|)$
     \end{solution}
@@ -167,4 +152,3 @@
     \end{solution}
 
 \end{questions}
-\end{document}

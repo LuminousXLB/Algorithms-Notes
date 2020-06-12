@@ -1,18 +1,5 @@
-\documentclass[answers]{exam}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业十一}
-
-\author{516021910528 - SHEN Jiamin}
-\date{\today}
-
-\begin{document}
-
-\maketitle
-
+\section{0426}\label{sec:0426}
 \begin{questions}
-    \section{0426}\label{sec:0426}
 
     \question 对凸多边形
     \begin{parts}
@@ -294,9 +281,11 @@
         因此判别过程的时间复杂度不超过$6n$即为$O(n)$。
     \end{solution}
 
+\end{questions}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \section{0427}\label{sec:0427}
+
+\section{0427}\label{sec:0427}
+\begin{questions}
     \question 海报墙由$n$块宽度相同高度不同的木板组成，那么在此海报墙上能够张贴的最大海报面积是多少？
     设木板宽度为$1$，高度为$h_1,h_2, \dots ,h_n$，海报必须整体都粘贴在墙上，并且不能斜贴。
 
@@ -342,18 +331,18 @@
             \State $Q \gets \Call{Queue}{\ }$
             \State $\Call{Queue.Push}{Q, (1,n)}$
             \While {$(x,y) \gets \Call{Queue.Pop}{Q}$}
-                \If {$y > x$}
-                    \State $idx \gets \Call{List.findFirst}{I, [x,y]}$ \Comment{找到$[x,y]$区间内最低的板子$idx$}
-                    \State $area \gets H[idx] \cdot (y-x+1)$ \Comment{算面积}
-                    \State $MaxArea \gets area$ if $MaxArea < area$
-                    \State $\Call{Queue.Push}{Q,(x, idx-1)}$ \Comment{添加两个字问题}
-                    \State $\Call{Queue.Push}{Q,(idx+1, y)}$
-                    \State $\Call{List.Remove}{I, idx}$   \Comment{移除这块板子}
-                \ElsIf {$y = x$}
-                    \State $area \gets H[x]$ \Comment{算面积}
-                    \State $MaxArea \gets area$ if $MaxArea < area$
-                    \State $\Call{List.Remove}{I, x}$   \Comment{移除这块板子}
-                \EndIf
+            \If {$y > x$}
+            \State $idx \gets \Call{List.findFirst}{I, [x,y]}$ \Comment{找到$[x,y]$区间内最低的板子$idx$}
+            \State $area \gets H[idx] \cdot (y-x+1)$ \Comment{算面积}
+            \State $MaxArea \gets area$ if $MaxArea < area$
+            \State $\Call{Queue.Push}{Q,(x, idx-1)}$ \Comment{添加两个字问题}
+            \State $\Call{Queue.Push}{Q,(idx+1, y)}$
+            \State $\Call{List.Remove}{I, idx}$   \Comment{移除这块板子}
+            \ElsIf {$y = x$}
+            \State $area \gets H[x]$ \Comment{算面积}
+            \State $MaxArea \gets area$ if $MaxArea < area$
+            \State $\Call{List.Remove}{I, x}$   \Comment{移除这块板子}
+            \EndIf
             \EndWhile
         \end{algorithmic}
     \end{algorithm}
@@ -366,5 +355,3 @@
         \end{enumerate}
     \end{solution}
 \end{questions}
-
-\end{document}

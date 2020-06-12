@@ -1,22 +1,11 @@
-\documentclass[answers]{exam}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业三}
-
-\author{516021910528 - SHEN Jiamin}
-\date{2020年3月9日}
-
-\begin{document}
-
-\maketitle
+\section{0309}
 
 \begin{questions}
 
     \question $k$为正常数，证明$\log{n} = o(n^k)$
     \begin{solution}
         \begin{proof}
-        只须证$\lim_{n \rightarrow + \infty} \frac{f(n)}{g(n)} = 0 $
+            只须证$\lim_{n \rightarrow + \infty} \frac{f(n)}{g(n)} = 0 $
         \end{proof}
     \end{solution}
 
@@ -46,7 +35,6 @@
     %     \end{proof}
     % \end{solution}
 
-    \newpage
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \question 寻找单调递增函数$f(n)$和$g(n)$，使得$f(n)=O(g(n))$和$g(n)=O(f(n))$都不成立
@@ -98,7 +86,6 @@
         综合可知，对于上述$f(n),g(n)$，$f(n)=O(g(n))$和$g(n)=O(f(n))$都不成立
     \end{solution}
 
-    \newpage
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \question 假设解决同一个问题的两个算法A1和A2的时间复杂性分别为$O(n^3)$和$O(n)$，
@@ -114,7 +101,6 @@
         此时，若输入规模$n < 16$，则算法A1比算法A2运行得更快。
     \end{solution}
 
-    \newpage
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \question 考虑以下冒泡排序算法。
@@ -161,5 +147,3 @@
     \end{parts}
 
 \end{questions}
-
-\end{document}

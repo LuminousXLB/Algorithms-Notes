@@ -1,16 +1,4 @@
-\documentclass[answers]{exam}
-% \documentclass{article}
-
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业二}
-
-\author{516021910528 - SHEN Jiamin}
-\date{2020年3月5日}
-
-\begin{document}
-
-\maketitle
+\section{0305}
 
 \begin{questions}
 
@@ -59,21 +47,22 @@
                 \begin{enumerate}
                     \item {
                           若$n\leq 5$，易知$n \in \left\{ a_i \right\}$，即由数列中的单个数即可表示。
-                          %   或$n\in \left\{5 \cdot 2^k \mid k \in \mathbb{N} \right\}$
                           }
                     \item {
                           由引理\ref{BinaryCase}和整数加法的线性性可推知，
-                          $\forall n \in \mathbb{N}^* , 5 | n, n < 5 \cdot 2^k$，$n$可以表示为集合$\left\{ 5 \cdot 2^i \mid 0 \leq i < k \right\}$中任意个不同数之和。所以若$5|n$，则$n$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和。\label{timesOfFive}
+                          $\forall n \in \mathbb{N}^* , 5 | n, n < 5 \cdot 2^k$，
+                          $n$可以表示为集合$\left\{ 5 \cdot 2^i \mid 0 \leq i < k \right\}$中任意个不同数之和。
+                          所以若$5|n$，则$n$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和。\label{timesOfFive}
                           }
-                          % \item {
-                          %       。由\ref{timesOfFive}可知。所以
-                          %       }
                 \end{enumerate}
-                $$\mathbb{N}^* = \left\{ 5x+y \mid x \in \mathbb{N}, y\in \left\{1,2,3,4 \right\} \right\}$$
-                其中$5x$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和；又$n \in \left\{ a_i \mid 1 \leq i < 5 \right\}$。归纳可知，任意正整数可以表示为$\left\{ a_i \right\}$中任意个不同数之和。
+                $$\mathbb{N}^* = \left\{ 5x+y \mid x \in \mathbb{N}, y\in \left\{0,1,2,3,4 \right\} \right\}$$
+                其中$5x$可以表示为$\left\{ a_i \mid i \geq 5 \right\}$中任意个不同数之和；
+                又$n \in \left\{ a_i \mid 1 \leq i < 5 \right\}$。
+                归纳可知，任意正整数可以表示为$\left\{ a_i \right\}$中任意个不同数之和。
             }
         \end{parts}
     \end{solution}
+
     \begin{solution}
         \begin{proof}
             该数列通项公式可表示为$$ a_i =
@@ -100,33 +89,17 @@
         \end{proof}
     \end{solution}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
     \question 广场上站着99个间谍，间谍与间谍之间的距离互不相等，每个间谍都盯着离自己最近的那个间谍看，证明总存在一个没被人盯着的间谍。
 
     \begin{solution}
-
-        间谍与监视关系构成一张有向图，图中每个节点的出度为1。
-
-        该图中不可能存在一个边数大于2的闭环（即$v_0 \rightarrow v_1 \rightarrow \dots \rightarrow v_n \rightarrow v_0 $）。
-        若存在这样一个闭环，则一定存在闭环上的一条边$(v_i, v_{i+1})$是环上所有边中最短的，所以$v_i, v_{i+1}$必互相监视，与假设不符。
-        所以该图中不可能存在一个边数大于2的闭环。
-
-        若无法形成闭环，由于每个节点出度为1，其每个连通子图只能存在以下情况
+        考虑距离最近的两个间谍，显然他们俩正互相盯着。
         \begin{itemize}
-            \item 两节点相互监视，且无其他节点监视这两个节点。
-            \item 链形$v_0 \rightarrow v_1 \rightarrow \dots \rightarrow v_n$。
-                  由于不可能存在闭环，要使$v_n$出度为1必有$v_n \rightarrow v_{n-1}$，此时必然存在$v_0$的入度为0。
-            \item 星形（即$v_1 \rightarrow v_0, v_2 \rightarrow v_0,\dots $）。
-                  由于$v_0$出度为1，只能与其中一个节点互相监视，周围其他节点的入度均为$0$。
+            \item 如果还有别人盯着他们俩中的任何一个，就表明有人同时被两个人盯着，因此必然存在另一个人没被人盯着；
+            \item 如果没有别人在盯这两个人，那么我们就可以去掉这两个人，这对其他人不会产生任何影响。
         \end{itemize}
 
-        当有99个间谍时，即使两两一对互相监视，也一定存在1个节点无法成对。
-        因此一定存在星形或链形结构，使存在至少一个人没有被盯着。
-
+        注意到广场上的总人数是个奇数，因此如此继续下去，要么我们能在某一步找到一个没被盯着的人，要么最终就只剩下一个人，而他显然没有被任何人盯着。
     \end{solution}
-
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \question 有10个海盗抢得了100枚金币，每个海盗都能够很理智地判断自己的得失，他们决定这样分配金币：
     \begin{enumerate}
@@ -355,8 +328,6 @@
         \end{parts}
     \end{solution}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
     \question 以下利用数学归纳法证明“所有的马颜色相同”错在哪儿
     \begin{enumerate}
         \item 只有一匹马时，命题成立
@@ -381,13 +352,3 @@
     \end{solution}
 
 \end{questions}
-
-
-
-
-
-
-
-
-
-\end{document}

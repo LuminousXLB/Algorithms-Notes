@@ -1,20 +1,6 @@
-\documentclass[answers]{exam}
 
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业十二}
-
-\author{516021910528 - SHEN Jiamin}
-\date{\today}
-
-\begin{document}
-
-\maketitle
-
+\section{0430}\label{sec:0430}
 \begin{questions}
-    \section{0430}\label{sec:0430}
-
-
     \question 已知$n$个矩形，这些矩形的边都平行于坐标轴
     \begin{parts}
         \part 求出这些矩形的交集
@@ -191,9 +177,10 @@
         \end{algorithmic}
     \end{algorithm}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \section{0507}\label{sec:0507}
+\end{questions}
 
+\section{0507}\label{sec:0507}
+\begin{questions}
     \question 设有复数$x=a+b \bm i$和$y=c+d \bm i$，设计算法，只用3次乘法计算乘积$xy$
     \begin{solution}
         \[
@@ -229,7 +216,7 @@
             设$Prod(n,k)$是整数$n$的最大$k$乘积。
             则\[
                 Prod(n,k) = \begin{cases}
-                    n                                           & , k = 1 \\
+                    n                                          & , k = 1 \\
                     Num(n,i) \cdot \max_{i} Prod(Num(n,i),k-1) & , k > 1
                 \end{cases}
             \]
@@ -255,5 +242,3 @@
 
 
 \end{questions}
-
-\end{document}

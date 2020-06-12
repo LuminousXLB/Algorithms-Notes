@@ -1,311 +1,293 @@
-\documentclass[answers]{exam}
+\section{0323}\label{sec:0323}
+\begin{questions}
 
-\input{premable.tex}
+    \question 设计算法将$1$到$n^2$按顺时针方向由内而外填入一个$n \times n$的矩阵
 
-\title{算法与复杂性 \quad 作业六}
+    % 例如$n=2$时，$
+    %     \begin{array}{cc}
+    %         2 & 3 \\
+    %         1 & 4
+    %     \end{array}
+    % $；$n=5$时，$
+    %     \begin{array}{ccccc}
+    %         25 & 10 & 11 & 12 & 13 \\
+    %         24 & 9  & 2  & 3  & 14 \\
+    %         23 & 8  & 1  & 4  & 15 \\
+    %         22 & 7  & 6  & 5  & 16 \\
+    %         21 & 20 & 19 & 18 & 17
+    %     \end{array}
+    % $
 
-\author{516021910528 - SHEN Jiamin}
-\date{2020年3月24日}
+    \begin{solution}
+        记该矩阵为$A[1..n][1..n]$。
+        % 当$n$为奇数时，去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵；
+        % 当$n$为偶数时，去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵。
 
-\begin{document}
-
-    \maketitle
-
-    \begin{questions}
-        \section{0323}\label{sec:0323}
-
-        \question 设计算法将$1$到$n^2$按顺时针方向由内而外填入一个$n \times n$的矩阵
-
-        % 例如$n=2$时，$
-        %     \begin{array}{cc}
-        %         2 & 3 \\
-        %         1 & 4
-        %     \end{array}
-        % $；$n=5$时，$
-        %     \begin{array}{ccccc}
-        %         25 & 10 & 11 & 12 & 13 \\
-        %         24 & 9  & 2  & 3  & 14 \\
-        %         23 & 8  & 1  & 4  & 15 \\
-        %         22 & 7  & 6  & 5  & 16 \\
-        %         21 & 20 & 19 & 18 & 17
-        %     \end{array}
-        % $
-
-        \begin{solution}
-            记该矩阵为$A[1..n][1..n]$。
-            % 当$n$为奇数时，去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵；
-            % 当$n$为偶数时，去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵。
-
-            \begin{algorithm}[H]
-                \caption{螺旋方阵}
-                \begin{algorithmic}[1]
-                    \Require {
-                        空间$A[1..n][1..n]$
-                    }
-                    % \Procedure{Main}{}
-                    \State \Call{SpiralMatrix}{$A, 0, 0, n$}
-                    % \EndProcedure
-                    \Statex
-                    \Procedure{SpiralMatrix}{$M, top, left, size$}
-                    \Statex
-                    \Comment{向以$M[top][left]$为$A[0][0]$的$size$维方阵中填入元素}
-                    \If{$n=1$}
-                    \State $M[top][left] \gets 1$
-                    \ElsIf {$[n \bmod 2] = 1$} \Comment{去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵}
-                    \State \Call{SpiralMatrix}{$A, top, left+1, n-1$} \Comment{以左上角右侧的元素为基准}
-                    \For {$i \gets 1$ to $n$}
-                    \State $M[n][i] \gets (n-1)^2 + n - (i - 1)$ \Comment{填充下边}
-                    \State $M[i][1] \gets n^2 - (i - 1)$ \Comment{填充左边}
-                    \EndFor
-                    \Else \Comment{去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵}
-                    \State \Call{SpiralMatrix}{$A, top+1, left, n-1$} \Comment{以左上角下侧的元素为基准}
-                    \For {$i \gets 1$ to $n$}
-                    \State $M[1][i] \gets (n-1)^2 + i$ \Comment{填充上边}
-                    \State $M[i][n] \gets (n-1)^2 + n + (i - 1)$ \Comment{填充右边}
-                    \EndFor
-                    \EndIf
-                    \EndProcedure
-                \end{algorithmic}
-            \end{algorithm}
-
-        \end{solution}
-
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        \question 给定整数数组$A[1..n]$，相邻两个元素的值最多相差$1$。
-        设$A[1]=x$，$A[n]=y$，并且$x<y$，输入$z$，$x \leq z \leq y$，判断$z$在数组$A$中出现的位置。
-        给出算法及时间复杂性（不得穷举）
-
-        \begin{solution}
-            相邻两个元素的值最多相差$1$，即有$A[i+1] - A[i] \in \left\{-1, 0, 1\right\}$。
-            可以据此类比连续函数上的零点存在性定理，即
-
-            \begin{center}
-                若$A[i] \leq z \leq A[j]$且$i < j$，则一定存在一个$m : i \leq m \leq j$使得$A[m] = z$
-            \end{center}
-
-            因此可用二分法，有如下算法：
-            \begin{algorithm}[H]
-                \caption{\quad}
-                \begin{algorithmic}[1]
-                    \Require{整数数组$A[1..n]$, $A$中的一个整数$z$}
-                    \Ensure{元素$z$在数组$A$中的位置}
-                    \State $lidx \gets 1, ridx \gets n$
-                    \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
-                    \While{$A[mid] \neq z$}
-                    \If {$A[mid] < z$}
-                    \State $left \gets mid$ \Comment{更新后仍有$A[left] < z$}
-                    \Else \Comment{$A[mid] > z$}
-                    \State $right \gets mid$ \Comment{更新后仍有$A[right] > z$}
-                    \EndIf
-                    \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
-                    \EndWhile
-                    \State \Return $mid$
-                \end{algorithmic}
-
-            \end{algorithm}
-
-            该算法的时间复杂度为$O(\log n)$
-
-        \end{solution}
-
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        \question 假设有$k$个长度为$n$的有序序列，采用下述方法将这些序列合并成一个具有$kn$个元素的有序序列：
-        将前两个序列合并，再并入第三个序列，然后是第四个……
-        直至所有序列合并。
-        \begin{parts}
-            \part 用$k$和$n$表示该方法的时间复杂性
-            \begin{solution}
-                当合并一个长度为$m$和一个长度为$n$的序列时\begin{itemize}
-                                            \item 赋值操作执行了$m+n$次
-                                            \item 比较操作至少执行$\min\left\{m,n\right\}$次，最多执行$2 \min\left\{m,n\right\}$次
-                \end{itemize}
-                所以此算法合并$k$个长度为$n$的有序序列所需时间为
-                \begin{align*}
-                    T(0, k, n) = T(n, k-1, n) & = 2n + cn + T(2n, k-2, n)                    \\
-                    & = (2+3)n + 2cn + T(3n, k-3, n)               \\
-                    & = \dots                                      \\
-                    & = \sum_{i=2}^{k} {i \cdot n} + (k-1)cn       \\
-                    & = \frac{(k+2)(k-1)}{2} n + (k-1)cn = O(k^2n)
-                \end{align*}
-
-            \end{solution}
-
-            \part 能不能得到一个效率更高的方法来合并这$k$个序列？
-            \begin{solution}
-                首先将第奇数个序列和第偶数个序列合并，形成$\left\lceil \frac{k}{2} \right\rceil$个最大长度为$2n$的序列；
-                然后重复上一步骤，直至最终只剩1个序列。
-
-                不妨设$k = 2^m$
-                \begin{align*}
-                    T(k,n) & = \frac{k}{2} T(2,n) + T \left(\frac{k}{2}, 2n\right) = 2^{m-1} (2+c)n + T \left(2^{m-1} , 2n\right)                            \\
-                    & = 2^{m-1} (2+c)n + 2^{m-2} 2(2+c)n + T \left(2^{m-2} , 4n\right) \\
-                    & = 2 \cdot 2^{m-1} (2+c)n + T \left(2^{m-2} , 2^2 n\right)        \\
-                    & = \dots                                                          \\
-                    & = (m-1) \cdot 2^{m-1} (2+c)n + T \left(2, 2^{m-1} n\right)       \\
-                    & = m \cdot 2^{m-1} (2+c)n = O(k n \log {k})
-                \end{align*}
-            \end{solution}
-        \end{parts}
-
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        \question 设$A[1..n]$是一个包含$n$个不同数的数组。
-        如果在$i<j$的情况下有$A[i]>A[j]$，则$(i,j)$为$A$中的一个逆序对。
-        \begin{parts}
-            \part 若$A=\left\{2, 3, 8, 6, 1\right\}$，列出其中所有的逆序对
-            \begin{solution}
-                \[(2,1) \quad (3,1) \quad (8,6) \quad (8,1) \quad (6,1)\]
-            \end{solution}
-            \part 若数组元素取自$\left\{ 1, 2, \dots ,n \right\}$，那么怎样的数组含有最多的逆序对？它包含多少个逆序对？
-            \begin{solution}
-                当数组为递减序列时包含有最多的逆序对，此时序列中任取一对数，都能构成逆序对。
-
-                逆序对数为$\frac{n(n-1)}{2}$。
-            \end{solution}
-            \part 求任意数组$A$中逆序对的数目，并证明算法的时间复杂性为$\Theta(n \log{n})$
-            \begin{solution}
-                应用分治法，结合归并排序。
-                首先将数组等分成左右两个子序列，分别求出两边的逆序对数（并同时进行排序）。
-                然后再求出分属于两个子序列的逆序对，即对每一个左序列中的元素，找出右序列中大于该元素的所有元素个数。
-                \[ T(n) = 2T(n/2) + (2+c)n = O(n \log n) \]
-            \end{solution}
-        \end{parts}
-
-        \begin{algorithm}
-            \caption{求逆序对数}
+        \begin{algorithm}[H]
+            \caption{螺旋方阵}
             \begin{algorithmic}[1]
-                \Require{数组$A[1..n]$}
-                \Ensure{$A$中的逆序对数$m$}
-
-                \State $(m, \_) \gets \Call{MergeInversions}{A[1..n]}$
+                \Require {
+                    空间$A[1..n][1..n]$
+                }
+                % \Procedure{Main}{}
+                \State \Call{SpiralMatrix}{$A, 0, 0, n$}
+                % \EndProcedure
                 \Statex
-
-                \Procedure{MergeInversions}{$A[1..n]$}
-                \Statex \Comment{输入一个数组$A$，输出一个二元组，包含该数组中的逆序对数及一个有序的该数组}
-                \If{$A.size = 1$}
-                \State \Return $(0, A)$
-                \ElsIf{$A.size = 2$}
-                \If{A[1] > A[2]}
-                \State \Return $(1, [A[2], A[1]])$
-                \Else
-                \State \Return $(0, A)$
-                \EndIf
-                \Else \Comment{分治}
-                \State $(nL, L) \gets \Call{MergeInversions}{A\left[1..\left\lfloor n/2 \right\rfloor\right]}$
-                \State $(nR, R) \gets \Call{MergeInversions}{A\left[\left\lfloor n/2 \right\rfloor+1 .. n\right]}$
-                \State $k \gets 1, cnt \gets 0$ \Comment{归并}
-                \While {$\neg L.empty \wedge \neg R.empty$}
-                \If{$ L.front \leq R.front $}
-                \State $A[k] = L.PopFront()$
-                \Else \Comment{$L[1]$大于$R$的所有剩余元素}
-                \State $A[k] = R.PopFront()$
-                \State $cnt \gets cnt + R.size$ \Comment{$L[1]$与$R$中所有剩余元素都构成逆序对}
-                \EndIf
-                \State $k \gets k + 1$
-                \EndWhile
-                \If{$\neg L.empty$} \Comment{填充剩余元素}
-                \State $A[k..n] = L$
-                \ElsIf{$\neg R.empty$}
-                \State $A[k..n] = R$
-                \EndIf
-                \State \Return $(cnt, A)$
+                \Procedure{SpiralMatrix}{$M, top, left, size$}
+                \Statex
+                \Comment{向以$M[top][left]$为$A[0][0]$的$size$维方阵中填入元素}
+                \If{$n=1$}
+                \State $M[top][left] \gets 1$
+                \ElsIf {$[n \bmod 2] = 1$} \Comment{去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵}
+                \State \Call{SpiralMatrix}{$A, top, left+1, n-1$} \Comment{以左上角右侧的元素为基准}
+                \For {$i \gets 1$ to $n$}
+                \State $M[n][i] \gets (n-1)^2 + n - (i - 1)$ \Comment{填充下边}
+                \State $M[i][1] \gets n^2 - (i - 1)$ \Comment{填充左边}
+                \EndFor
+                \Else \Comment{去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵}
+                \State \Call{SpiralMatrix}{$A, top+1, left, n-1$} \Comment{以左上角下侧的元素为基准}
+                \For {$i \gets 1$ to $n$}
+                \State $M[1][i] \gets (n-1)^2 + i$ \Comment{填充上边}
+                \State $M[i][n] \gets (n-1)^2 + n + (i - 1)$ \Comment{填充右边}
+                \EndFor
                 \EndIf
                 \EndProcedure
             \end{algorithmic}
         \end{algorithm}
 
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \end{solution}
 
 
-        \section{0326}\label{sec:0326}
+    \question 给定整数数组$A[1..n]$，相邻两个元素的值最多相差$1$。
+    设$A[1]=x$，$A[n]=y$，并且$x<y$，输入$z$，$x \leq z \leq y$，判断$z$在数组$A$中出现的位置。
+    给出算法及时间复杂性（不得穷举）
 
-        \question 证明二分查找是有序序列查找的最优算法
+    \begin{solution}
+        相邻两个元素的值最多相差$1$，即有$A[i+1] - A[i] \in \left\{-1, 0, 1\right\}$。
+        可以据此类比连续函数上的零点存在性定理，即
+
+        \begin{center}
+            若$A[i] \leq z \leq A[j]$且$i < j$，则一定存在一个$m : i \leq m \leq j$使得$A[m] = z$
+        \end{center}
+
+        因此可用二分法，有如下算法：
+        \begin{algorithm}[H]
+            \caption{\quad}
+            \begin{algorithmic}[1]
+                \Require{整数数组$A[1..n]$, $A$中的一个整数$z$}
+                \Ensure{元素$z$在数组$A$中的位置}
+                \State $lidx \gets 1, ridx \gets n$
+                \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
+                \While{$A[mid] \neq z$}
+                \If {$A[mid] < z$}
+                \State $left \gets mid$ \Comment{更新后仍有$A[left] < z$}
+                \Else \Comment{$A[mid] > z$}
+                \State $right \gets mid$ \Comment{更新后仍有$A[right] > z$}
+                \EndIf
+                \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
+                \EndWhile
+                \State \Return $mid$
+            \end{algorithmic}
+
+        \end{algorithm}
+
+        该算法的时间复杂度为$O(\log n)$
+
+    \end{solution}
+
+
+    \question 假设有$k$个长度为$n$的有序序列，采用下述方法将这些序列合并成一个具有$kn$个元素的有序序列：
+    将前两个序列合并，再并入第三个序列，然后是第四个……
+    直至所有序列合并。
+    \begin{parts}
+        \part 用$k$和$n$表示该方法的时间复杂性
         \begin{solution}
-            在一个长度为$n$的有序数组中查找一个元素，该元素的位置为$i$的概率为$p_i = \frac{1}{n}$。
-            因此，\textbf{在没有附加信息的前提下}，事件“确定一个元素的位置”能提供的信息至少为$I_e = -\log{p_i} = \log n$。
-            而一次比较只能给出真、假两种结果，即一次比较能提供的信息为$I_c = \log{2}$。
-            所以至少需要经过
-            \[\frac{I_e}{I_c} = \frac{ \log{n} }{ \log{2} } = \log_2{n}\]
-            次比较方能确定长度为$n$的数组中一个元素的位置。
-            即该问题的信息论下界为$\Omega(\log n)$。
-
-            二分查找法的效率恰好为$\Omega(\log n)$，因此二分查找法是最优的基于比较的有序序列查找算法。
-
-            但如果有附加信息存在（例如给定数组的分布情况）使该元素的位置为$i$的概率$p'_i > \frac{1}{n}$，
-            则其信息量$I'_e < \log n$。
-            此时利用这些附加信息可能不需要$\log_2{n}$次比较即可找到它的位置。
+            当合并一个长度为$m$和一个长度为$n$的序列时\begin{itemize}
+                \item 赋值操作执行了$m+n$次
+                \item 比较操作至少执行$\min\left\{m,n\right\}$次，最多执行$2 \min\left\{m,n\right\}$次
+            \end{itemize}
+            所以此算法合并$k$个长度为$n$的有序序列所需时间为
+            \begin{align*}
+                T(0, k, n) = T(n, k-1, n) & = 2n + cn + T(2n, k-2, n)                    \\
+                                          & = (2+3)n + 2cn + T(3n, k-3, n)               \\
+                                          & = \dots                                      \\
+                                          & = \sum_{i=2}^{k} {i \cdot n} + (k-1)cn       \\
+                                          & = \frac{(k+2)(k-1)}{2} n + (k-1)cn = O(k^2n)
+            \end{align*}
 
         \end{solution}
 
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        \question 写出两种建堆方法的伪代码
+        \part 能不能得到一个效率更高的方法来合并这$k$个序列？
         \begin{solution}
+            首先将第奇数个序列和第偶数个序列合并，形成$\left\lceil \frac{k}{2} \right\rceil$个最大长度为$2n$的序列；
+            然后重复上一步骤，直至最终只剩1个序列。
 
-            \begin{algorithm}[H]
-                \caption{自顶向下建堆}
-                \begin{algorithmic}[1]
-                    \Require {$A[1..n]$}
-                    \Ensure {重排$A$，使其每个非叶子节点的值不小于其子节点的值}
-                    \For {$i \gets 2$ to $n$}
-                    \State {$j \gets i$}
-                    \While {$j > 1 \wedge A[j] > A\left[\left\lfloor j/2 \right\rfloor\right]$}
-                    \State \Call{Swap}{$A[j] , A\left[\left\lfloor j/2 \right\rfloor\right]$}
-                    \State $j \gets \left\lfloor j/2 \right\rfloor$
-                    \EndWhile
-                    \EndFor
-                \end{algorithmic}
-            \end{algorithm}
+            不妨设$k = 2^m$
+            \begin{align*}
+                T(k,n) & = \frac{k}{2} T(2,n) + T \left(\frac{k}{2}, 2n\right) = 2^{m-1} (2+c)n + T \left(2^{m-1} , 2n\right) \\
+                       & = 2^{m-1} (2+c)n + 2^{m-2} 2(2+c)n + T \left(2^{m-2} , 4n\right)                                     \\
+                       & = 2 \cdot 2^{m-1} (2+c)n + T \left(2^{m-2} , 2^2 n\right)                                            \\
+                       & = \dots                                                                                              \\
+                       & = (m-1) \cdot 2^{m-1} (2+c)n + T \left(2, 2^{m-1} n\right)                                           \\
+                       & = m \cdot 2^{m-1} (2+c)n = O(k n \log {k})
+            \end{align*}
+        \end{solution}
+    \end{parts}
 
-            \begin{algorithm}[H]
-                \caption{自底向上建堆}
-                \begin{algorithmic}[1]
-                    \Require {$A[1..n]$}
-                    \Ensure {重排$A$，使其每个非叶子节点的值不小于其子节点的值}
-                    \For {$i \gets \lfloor n/2 \rfloor$ to $1$}
-                    \State $j \gets 2i$
-                    \While {$ j \le n $}
-                    \If {$ j+1 \le n \wedge A[j+1] > A[j]$}
-                    \State $j \gets j+1$
-                    \EndIf
-                    \If {$ A[j] > A\left[\left\lfloor j/2 \right\rfloor\right]$}
-                    \State \Call{Swap}{$A[j] , A\left[\left\lfloor j/2 \right\rfloor\right]$}
-                    \Else
-                    \State \textbf{break}
-                    \EndIf
-                    \State $j \gets 2j$
-                    \EndWhile
-                    \EndFor
-                \end{algorithmic}
-            \end{algorithm}
 
+    \question 设$A[1..n]$是一个包含$n$个不同数的数组。
+    如果在$i<j$的情况下有$A[i]>A[j]$，则$(i,j)$为$A$中的一个逆序对。
+    \begin{parts}
+        \part 若$A=\left\{2, 3, 8, 6, 1\right\}$，列出其中所有的逆序对
+        \begin{solution}
+            \[(2,1) \quad (3,1) \quad (8,6) \quad (8,1) \quad (6,1)\]
+        \end{solution}
+        \part 若数组元素取自$\left\{ 1, 2, \dots ,n \right\}$，那么怎样的数组含有最多的逆序对？它包含多少个逆序对？
+        \begin{solution}
+            当数组为递减序列时包含有最多的逆序对，此时序列中任取一对数，都能构成逆序对。
+
+            逆序对数为$\frac{n(n-1)}{2}$。
+        \end{solution}
+        \part 求任意数组$A$中逆序对的数目，并证明算法的时间复杂性为$\Theta(n \log{n})$
+        \begin{solution}
+            应用分治法，结合归并排序。
+            首先将数组等分成左右两个子序列，分别求出两边的逆序对数（并同时进行排序）。
+            然后再求出分属于两个子序列的逆序对，即对每一个左序列中的元素，找出右序列中大于该元素的所有元素个数。
+            \[ T(n) = 2T(n/2) + (2+c)n = O(n \log n) \]
+        \end{solution}
+    \end{parts}
+
+    \begin{algorithm}
+        \caption{求逆序对数}
+        \begin{algorithmic}[1]
+            \Require{数组$A[1..n]$}
+            \Ensure{$A$中的逆序对数$m$}
+
+            \State $(m, \_) \gets \Call{MergeInversions}{A[1..n]}$
+            \Statex
+
+            \Procedure{MergeInversions}{$A[1..n]$}
+            \Statex \Comment{输入一个数组$A$，输出一个二元组，包含该数组中的逆序对数及一个有序的该数组}
+            \If{$A.size = 1$}
+            \State \Return $(0, A)$
+            \ElsIf{$A.size = 2$}
+            \If{A[1] > A[2]}
+            \State \Return $(1, [A[2], A[1]])$
+            \Else
+            \State \Return $(0, A)$
+            \EndIf
+            \Else \Comment{分治}
+            \State $(nL, L) \gets \Call{MergeInversions}{A\left[1..\left\lfloor n/2 \right\rfloor\right]}$
+            \State $(nR, R) \gets \Call{MergeInversions}{A\left[\left\lfloor n/2 \right\rfloor+1 .. n\right]}$
+            \State $k \gets 1, cnt \gets 0$ \Comment{归并}
+            \While {$\neg L.empty \wedge \neg R.empty$}
+            \If{$ L.front \leq R.front $}
+            \State $A[k] = L.PopFront()$
+            \Else \Comment{$L[1]$大于$R$的所有剩余元素}
+            \State $A[k] = R.PopFront()$
+            \State $cnt \gets cnt + R.size$ \Comment{$L[1]$与$R$中所有剩余元素都构成逆序对}
+            \EndIf
+            \State $k \gets k + 1$
+            \EndWhile
+            \If{$\neg L.empty$} \Comment{填充剩余元素}
+            \State $A[k..n] = L$
+            \ElsIf{$\neg R.empty$}
+            \State $A[k..n] = R$
+            \EndIf
+            \State \Return $(cnt, A)$
+            \EndIf
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+
+
+\end{questions}
+
+\section{0326}\label{sec:0326}
+\begin{questions}
+
+    \question 证明二分查找是有序序列查找的最优算法
+    \begin{solution}
+        在一个长度为$n$的有序数组中查找一个元素，该元素的位置为$i$的概率为$p_i = \frac{1}{n}$。
+        因此，\textbf{在没有附加信息的前提下}，事件“确定一个元素的位置”能提供的信息至少为$I_e = -\log{p_i} = \log n$。
+        而一次比较只能给出真、假两种结果，即一次比较能提供的信息为$I_c = \log{2}$。
+        所以至少需要经过
+        \[\frac{I_e}{I_c} = \frac{ \log{n} }{ \log{2} } = \log_2{n}\]
+        次比较方能确定长度为$n$的数组中一个元素的位置。
+        即该问题的信息论下界为$\Omega(\log n)$。
+
+        二分查找法的效率恰好为$\Omega(\log n)$，因此二分查找法是最优的基于比较的有序序列查找算法。
+
+        但如果有附加信息存在（例如给定数组的分布情况）使该元素的位置为$i$的概率$p'_i > \frac{1}{n}$，
+        则其信息量$I'_e < \log n$。
+        此时利用这些附加信息可能不需要$\log_2{n}$次比较即可找到它的位置。
+
+    \end{solution}
+
+
+    \question 写出两种建堆方法的伪代码
+    \begin{solution}
+
+        \begin{algorithm}[H]
+            \caption{自顶向下建堆}
+            \begin{algorithmic}[1]
+                \Require {$A[1..n]$}
+                \Ensure {重排$A$，使其每个非叶子节点的值不小于其子节点的值}
+                \For {$i \gets 2$ to $n$}
+                \State {$j \gets i$}
+                \While {$j > 1 \wedge A[j] > A\left[\left\lfloor j/2 \right\rfloor\right]$}
+                \State \Call{Swap}{$A[j] , A\left[\left\lfloor j/2 \right\rfloor\right]$}
+                \State $j \gets \left\lfloor j/2 \right\rfloor$
+                \EndWhile
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \caption{自底向上建堆}
+            \begin{algorithmic}[1]
+                \Require {$A[1..n]$}
+                \Ensure {重排$A$，使其每个非叶子节点的值不小于其子节点的值}
+                \For {$i \gets \lfloor n/2 \rfloor$ to $1$}
+                \State $j \gets 2i$
+                \While {$ j \le n $}
+                \If {$ j+1 \le n \wedge A[j+1] > A[j]$}
+                \State $j \gets j+1$
+                \EndIf
+                \If {$ A[j] > A\left[\left\lfloor j/2 \right\rfloor\right]$}
+                \State \Call{Swap}{$A[j] , A\left[\left\lfloor j/2 \right\rfloor\right]$}
+                \Else
+                \State \textbf{break}
+                \EndIf
+                \State $j \gets 2j$
+                \EndWhile
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+
+    \end{solution}
+
+
+    \question 对玻璃瓶做强度测试。
+    设地面高度为$0$，从$0$往上有刻度$1$到$n$，相邻两个刻度间距离都相等。
+    如果一个玻璃瓶从刻度i落到地面没有破碎，而在高度$i+1$处落到地面时碎了，则此类玻璃瓶的强度为$i$。
+    \begin{parts}
+        \part 若只有一个样品供测试，如何得到该类玻璃瓶的强度
+        \begin{solution}
+            从刻度$1$开始逐个高度进行测试，找到使其摔碎的最低高度。
         \end{solution}
 
-        \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \part 如果样品数量充足，如何用尽量少的测试次数得到强度
+        \begin{solution}
+            使用二分法。首先测试高度$\frac{n}{2}$，若摔碎了则测试$\frac{n}{4}$，若没摔碎则测试$\frac{3}{4}n$，依此类推。
+        \end{solution}
 
-        \question 对玻璃瓶做强度测试。
-        设地面高度为$0$，从$0$往上有刻度$1$到$n$，相邻两个刻度间距离都相等。
-        如果一个玻璃瓶从刻度i落到地面没有破碎，而在高度$i+1$处落到地面时碎了，则此类玻璃瓶的强度为$i$。
-        \begin{parts}
-            \part 若只有一个样品供测试，如何得到该类玻璃瓶的强度
-            \begin{solution}
-                从刻度$1$开始逐个高度进行测试，找到使其摔碎的最低高度。
-            \end{solution}
+        \part 如果有两个样品，如何用尽量少的测试次数得到强度
+        \begin{solution}
+            第一个瓶子测试高度$k\sqrt{n}$（$k$从$1$到$\sqrt{n}$），可以确定一个高度为$\sqrt{n}$的区间。
 
-            \part 如果样品数量充足，如何用尽量少的测试次数得到强度
-            \begin{solution}
-                使用二分法。首先测试高度$\frac{n}{2}$，若摔碎了则测试$\frac{n}{4}$，若没摔碎则测试$\frac{3}{4}n$，依此类推。
-            \end{solution}
+            第二个瓶子在上述区间内从最低高度开始逐渐提升高度，最多测试$\sqrt{n}$次。
 
-            \part 如果有两个样品，如何用尽量少的测试次数得到强度
-            \begin{solution}
-                第一个瓶子测试高度$k\sqrt{n}$（$k$从$1$到$\sqrt{n}$），可以确定一个高度为$\sqrt{n}$的区间。
-
-                第二个瓶子在上述区间内从最低高度开始逐渐提升高度，最多测试$\sqrt{n}$次。
-
-            \end{solution}
-        \end{parts}
-    \end{questions}
-\end{document}
+        \end{solution}
+    \end{parts}
+\end{questions}

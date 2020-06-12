@@ -1,18 +1,6 @@
-\documentclass[answers]{exam}
 
-\input{premable.tex}
-
-\title{算法与复杂性 \quad 作业七}
-
-\author{516021910528 - SHEN Jiamin}
-\date{2020年3月30日}
-
-\begin{document}
-
-\maketitle
-
+\section{0330}\label{sec:0330}
 \begin{questions}
-    \section{0330}\label{sec:0330}
 
     \question 有$n$个数存放在两个有序数组中，如何找到这$n$个数的第$k$小的数
 
@@ -352,9 +340,9 @@
             \EndProcedure
         \end{algorithmic}
     \end{algorithm}
+\end{questions}
 
-    \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\begin{questions}
     \section{0402}\label{sec:0402}
 
     \question 用分治法找到数组中的最大数和最小数，若数组规模为2的幂，证明需要的比较次数为$\frac{3}{2} n -2$
@@ -483,7 +471,7 @@
             使用一种基于比较的排序算法（如快速排序），即可在$O(n\log n)$的时间内排除顺序。
         \end{solution}
     \end{parts}
-   
+
     \question 数组$A$中包含$n$个互不相同的整数，用$O(n)$的时间找出$A$中最大的$i$个数，并按从大到小的次序输出（$i \leq n^{1/2}$）
     \begin{solution}
         首先使用自底向上的方法建最大堆，然后出堆$i$次。
@@ -508,6 +496,4 @@
 
     \end{solution}
 
-
 \end{questions}
-\end{document}
