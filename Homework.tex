@@ -11,9 +11,15 @@
 
 \maketitle
 
-\textbf{本合集并非本人上交作业的原始版本。}
+{
+    \color{red}
+    本合集并非本人上交作业的原始版本。
+}
 
-\tableofcontents
+\begin{multicols}{2}[\centering\textbf{\Large 目　录}]
+    \renewcommand{\contentsname}{}
+    \tableofcontents
+\end{multicols}
 
 \newpage
 \input{Homework01.tex}
