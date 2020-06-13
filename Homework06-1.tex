@@ -3,60 +3,60 @@
 
     \question 设计算法将$1$到$n^2$按顺时针方向由内而外填入一个$n \times n$的矩阵
 
-    % 例如$n=2$时，$
-    %     \begin{array}{cc}
-    %         2 & 3 \\
-    %         1 & 4
-    %     \end{array}
-    % $；$n=5$时，$
-    %     \begin{array}{ccccc}
-    %         25 & 10 & 11 & 12 & 13 \\
-    %         24 & 9  & 2  & 3  & 14 \\
-    %         23 & 8  & 1  & 4  & 15 \\
-    %         22 & 7  & 6  & 5  & 16 \\
-    %         21 & 20 & 19 & 18 & 17
-    %     \end{array}
-    % $
+    例如$n=2$时，$
+        \begin{array}{cc}
+            2 & 3 \\
+            1 & 4
+        \end{array}
+    $；$n=5$时，$
+        \begin{array}{ccccc}
+            25 & 10 & 11 & 12 & 13 \\
+            24 & 9  & 2  & 3  & 14 \\
+            23 & 8  & 1  & 4  & 15 \\
+            22 & 7  & 6  & 5  & 16 \\
+            21 & 20 & 19 & 18 & 17
+        \end{array}
+    $
 
     \begin{solution}
         记该矩阵为$A[1..n][1..n]$。
-        % 当$n$为奇数时，去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵；
-        % 当$n$为偶数时，去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵。
+        当$n$为奇数时，去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵；
+        当$n$为偶数时，去掉第一行和最后一列后，剩余的元素为$n-1$维的方阵。
 
-        \begin{algorithm}[H]
-            \caption{螺旋方阵}
-            \begin{algorithmic}[1]
-                \Require {
-                    空间$A[1..n][1..n]$
-                }
-                % \Procedure{Main}{}
-                \State \Call{SpiralMatrix}{$A, 0, 0, n$}
-                % \EndProcedure
-                \Statex
-                \Procedure{SpiralMatrix}{$M, top, left, size$}
-                \Statex
-                \Comment{向以$M[top][left]$为$A[0][0]$的$size$维方阵中填入元素}
-                \If{$n=1$}
-                \State $M[top][left] \gets 1$
-                \ElsIf {$[n \bmod 2] = 1$} \Comment{去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵}
-                \State \Call{SpiralMatrix}{$A, top, left+1, n-1$} \Comment{以左上角右侧的元素为基准}
-                \For {$i \gets 1$ to $n$}
-                \State $M[n][i] \gets (n-1)^2 + n - (i - 1)$ \Comment{填充下边}
-                \State $M[i][1] \gets n^2 - (i - 1)$ \Comment{填充左边}
-                \EndFor
-                \Else \Comment{去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵}
-                \State \Call{SpiralMatrix}{$A, top+1, left, n-1$} \Comment{以左上角下侧的元素为基准}
-                \For {$i \gets 1$ to $n$}
-                \State $M[1][i] \gets (n-1)^2 + i$ \Comment{填充上边}
-                \State $M[i][n] \gets (n-1)^2 + n + (i - 1)$ \Comment{填充右边}
-                \EndFor
-                \EndIf
-                \EndProcedure
-            \end{algorithmic}
-        \end{algorithm}
-
+        \textbf{伪代码见算法\ref{0323:spiralmat}}
     \end{solution}
 
+    \begin{algorithm}[!htp]
+        \caption{螺旋方阵}\label{0323:spiralmat}
+        \begin{algorithmic}[1]
+            \Require {
+                空间$A[1..n][1..n]$
+            }
+            % \Procedure{Main}{}
+            \State \Call{SpiralMatrix}{$A, 0, 0, n$}
+            % \EndProcedure
+            \Statex
+            \Procedure{SpiralMatrix}{$M, top, left, size$}
+            \Statex
+            \Comment{向以$M[top][left]$为$A[0][0]$的$size$维方阵中填入元素}
+            \If{$n=1$}
+            \State $M[top][left] \gets 1$
+            \ElsIf {$[n \bmod 2] = 1$} \Comment{去掉第一列和最后一行后，剩余的元素为$n-1$维的方阵}
+            \State \Call{SpiralMatrix}{$A, top, left+1, n-1$} \Comment{以左上角右侧的元素为基准}
+            \For {$i \gets 1$ to $n$}
+            \State $M[n][i] \gets (n-1)^2 + n - (i - 1)$ \Comment{填充下边}
+            \State $M[i][1] \gets n^2 - (i - 1)$ \Comment{填充左边}
+            \EndFor
+            \Else \Comment{去掉第一行和最后一行后，剩余的元素为$n-1$维的方阵}
+            \State \Call{SpiralMatrix}{$A, top+1, left, n-1$} \Comment{以左上角下侧的元素为基准}
+            \For {$i \gets 1$ to $n$}
+            \State $M[1][i] \gets (n-1)^2 + i$ \Comment{填充上边}
+            \State $M[i][n] \gets (n-1)^2 + n + (i - 1)$ \Comment{填充右边}
+            \EndFor
+            \EndIf
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
 
     \question 给定整数数组$A[1..n]$，相邻两个元素的值最多相差$1$。
     设$A[1]=x$，$A[n]=y$，并且$x<y$，输入$z$，$x \leq z \leq y$，判断$z$在数组$A$中出现的位置。
@@ -70,31 +70,27 @@
             若$A[i] \leq z \leq A[j]$且$i < j$，则一定存在一个$m : i \leq m \leq j$使得$A[m] = z$
         \end{center}
 
-        因此可用二分法，有如下算法：
-        \begin{algorithm}[H]
-            \caption{\quad}
-            \begin{algorithmic}[1]
-                \Require{整数数组$A[1..n]$, $A$中的一个整数$z$}
-                \Ensure{元素$z$在数组$A$中的位置}
-                \State $lidx \gets 1, ridx \gets n$
-                \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
-                \While{$A[mid] \neq z$}
-                \If {$A[mid] < z$}
-                \State $left \gets mid$ \Comment{更新后仍有$A[left] < z$}
-                \Else \Comment{$A[mid] > z$}
-                \State $right \gets mid$ \Comment{更新后仍有$A[right] > z$}
-                \EndIf
-                \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
-                \EndWhile
-                \State \Return $mid$
-            \end{algorithmic}
-
-        \end{algorithm}
-
-        该算法的时间复杂度为$O(\log n)$
-
+        因此可用二分法，有算法\ref{0323:02}。该算法的时间复杂度为$O(\log n)$。
     \end{solution}
 
+    \begin{algorithm}[!htp]
+        \caption{\quad}\label{0323:02}
+        \begin{algorithmic}[1]
+            \Require{整数数组$A[1..n]$, $A$中的一个整数$z$}
+            \Ensure{元素$z$在数组$A$中的位置}
+            \State $lidx \gets 1, ridx \gets n$
+            \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
+            \While{$A[mid] \neq z$}
+            \If {$A[mid] < z$}
+            \State $left \gets mid$ \Comment{更新后仍有$A[left] < z$}
+            \Else \Comment{$A[mid] > z$}
+            \State $right \gets mid$ \Comment{更新后仍有$A[right] > z$}
+            \EndIf
+            \State $mid \gets \left\lfloor \frac{lidx+ridx}{2} \right\rfloor$
+            \EndWhile
+            \State \Return $mid$
+        \end{algorithmic}
+    \end{algorithm}
 
     \question 假设有$k$个长度为$n$的有序序列，采用下述方法将这些序列合并成一个具有$kn$个元素的有序序列：
     将前两个序列合并，再并入第三个序列，然后是第四个……
@@ -140,7 +136,16 @@
     \begin{parts}
         \part 若$A=\left\{2, 3, 8, 6, 1\right\}$，列出其中所有的逆序对
         \begin{solution}
-            \[(2,1) \quad (3,1) \quad (8,6) \quad (8,1) \quad (6,1)\]
+            \begin{center}
+                \begin{tabular}{c |ccccc}
+                    \hline
+                    index & 1 & 2 & 3 & 4 & 5 \\ \hline
+                    value & 2 & 3 & 8 & 6 & 1 \\
+                    \hline
+                \end{tabular}
+            \end{center}
+
+            \[ (1,5) \quad (2,5) \quad (3,4) \quad (3,5) \quad (4,5) \]
         \end{solution}
         \part 若数组元素取自$\left\{ 1, 2, \dots ,n \right\}$，那么怎样的数组含有最多的逆序对？它包含多少个逆序对？
         \begin{solution}
@@ -154,11 +159,13 @@
             首先将数组等分成左右两个子序列，分别求出两边的逆序对数（并同时进行排序）。
             然后再求出分属于两个子序列的逆序对，即对每一个左序列中的元素，找出右序列中大于该元素的所有元素个数。
             \[ T(n) = 2T(n/2) + (2+c)n = O(n \log n) \]
+
+            \textbf{伪代码见算法\ref{0323:inversion}}
         \end{solution}
     \end{parts}
 
     \begin{algorithm}
-        \caption{求逆序对数}
+        \caption{求逆序对数}\label{0323:inversion}
         \begin{algorithmic}[1]
             \Require{数组$A[1..n]$}
             \Ensure{$A$中的逆序对数$m$}
