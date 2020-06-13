@@ -1,0 +1,75 @@
+\section{0316}
+\begin{questions}
+
+    \question 求解递推关系$$T(n) = n + \sum_{i=1}^{n-1}{T(i)}$$其中$T(1)=1$
+    \begin{solution}
+        $$
+            T(n+1) = (n+1) + \sum_{i=1}^{n}{T(i)}
+        $$
+        $$
+            T(n+1) - T(n)  = \left[(n+1) + \sum_{i=1}^{n}{T(i)}\right] - \left[n + \sum_{i=1}^{n-1}{T(i)}\right]
+            = 1 + T(n)
+        $$
+        $$
+            T(n+1) = 2T(n) + 1 \Rightarrow
+            T(n+1) + 1 = 2T(n) + 2 \Rightarrow
+            \frac{T(n+1) + 1}{T(n) + 1} = 2
+        $$
+        所以当$n>2$时，
+        $$
+            T(n) + 1 = T(1) \times 2^n \Rightarrow
+            T(n) = 2^n - 1
+        $$
+        又当$n=1$时，$T(1) = 1$恰好符合上式，所以对任意的$n \in \mathbb{N}^*$，
+        $$
+            T(n) = 2^n - 1
+        $$
+    \end{solution}
+
+    \question 在寻找一对一映射问题中，算法结束时集合S是否可能为空集？请证明你的结论。
+
+    {\kaishu
+    给定一个集合$A$和一个从$A$到自身的映射$f$，
+    寻找一个元素个数最多的子集$S \subseteq A$，满足$f$在$S$上是一一映射
+    }
+
+    \begin{solution}
+        不可能为空集。
+
+        \begin{proof}
+            设集合$A$中有$n$个元素。
+
+            从集合中任取一个元素记作$x_1$，记$i \geq 2$时$x_{i} = f(x_{i-1})$。
+
+            由于对任意的$x \in A$，都有且仅有一个$x' \in A, x' = f(x)$，所以序列$\left\{x_i\right\}$的长度是无限的。
+            但是集合$A$中元素个数是有限的，所以必然存在至少一对$m < n$使得$x_m = x_n$。
+
+            取一对使$x_m, \dots, x_{n-1}$各不相同的$m,n$
+            \begin{itemize}
+                \item 若存在$k:m < k < n , x_m = x_k$，则令$n = k$
+                \item 若存在$p,q:m < p < q < n , x_p = x_q$，则令$m = p, n = q$
+            \end{itemize}
+
+            由$\left\{x_i\right\}$的定义可知，$x_m, \dots, x_{n-1}$构成了一个循环置换
+            $$
+                \left(
+                \begin{array}{ccc}
+                        x_m & \cdots & x_{n-1}
+                    \end{array}
+                \right)
+                =
+                \left(
+                \begin{array}{cccc}
+                        x_m     & x_{m+1} & \cdots & x_{n-2} \\
+                        x_{m+1} & \cdots  & \cdots & x_{n-1}
+                    \end{array}
+                \right)
+            $$
+
+            由置换的定义可知，$f$在$\left\{x_m, \dots , x_{n-1} \right\}$上是一一映射，
+            即$\left\{x_m, \dots , x_{n-1} \right\} \subseteq S$，所以$S \neq \Phi$。
+
+        \end{proof}
+    \end{solution}
+
+\end{questions}
