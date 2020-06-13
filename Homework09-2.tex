@@ -12,6 +12,11 @@
         对上图进行广度优先搜索即可找出最短路径长度。
         进一步地，构图和广度优先搜索可以同时进行。
 
+        {
+        \color{red}
+        因为是任意两点，所以应该应用Floyd算法求出所有点对之间的最短距离。
+        }
+
     \end{solution}
 
     \question 设计线性时间算法求树的最大匹配
@@ -53,6 +58,54 @@
         对于所有度数为$1$的节点，首先标记其相邻的点都在$U$中，然后删除与U中的点直接相邻的所有边。
         重复上述步骤，直至所有边都被删除。
 
+        \textbf{伪代码见算法\ref{alg:0416:03}}
+
+        选择合适的根节点所需时间复杂度为$O(|E|)$，
+        BFS的时间复杂度为$O(|E|+|V|)$，
+        遍历过程中，每个节点最多被访问三次。
+        总体时间复杂度为$O(|E|+|V|)$。
     \end{solution}
 
+    \begin{algorithm}[!htp]
+        \caption{求树的最小顶点覆盖} \label{alg:0416:03}
+        \begin{algorithmic}[1]
+            \Require {$G=(V,E)$（一棵树）}
+            \Ensure {$cover$（树的最小顶点覆盖）}
+
+            \State \Return $\left\{ V[0] \right\}$ if {$|V| \le 2$}
+            \State 选一个度数大于1的节点记为$root$，广度优先搜索构建一棵树
+            \State $cover \gets \Phi$
+            \State $s \gets \Call{Stack.Init}{root}$
+
+            \While {$\neg \Call{Stack.isEmpty}{s}$} \Comment{后序遍历}
+
+            \State $node \gets \Call{Stack.Pop}{s}$
+
+            \If {$node.isLeaf$} \Comment{当前节点是叶子节点}
+
+            \State $node.inCover \gets \mathsf{False}$
+
+            \ElsIf{ $node.isVisited$ } \Comment{非叶子节点，子节点已入栈}
+
+            \For{$child$ in $node.children$}
+                \If {$\neg child.inCover $}
+                    \State $node.inCover \gets \mathsf{True}$
+                    \State $ cover \gets cover \cup \left\{ node \right\} $
+                    \State \textbf{break}
+                \EndIf
+            \EndFor
+
+            \Else \Comment{非叶子节点，子节点未入栈}
+
+            \State $\Call{Stack.Push}{node}$
+            \State $\Call{Stack.Push}{**node.children}$
+            \State $node.isVisited \gets \mathsf{True}$
+
+            \EndIf
+
+            \EndWhile
+
+            \State \Return $cover$
+        \end{algorithmic}
+    \end{algorithm}
 \end{questions}
