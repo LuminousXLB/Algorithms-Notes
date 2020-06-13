@@ -86,29 +86,12 @@
             同时表格中的值应关于对角线对称，所以只需考虑对角线一侧的值（这里只考虑上方）。
             因此只要以某种算法，使用$[0, n-1)$中的整数填写上表，使每行、每列都不存在重复的数即可。
 
-            填写表格方法为：%（算法\ref{0402:FillTable}）：
+            填写表格方法为（算法\ref{0402:FillTable}）：
             \begin{itemize}
                 \item 第一个数：\[ m_{1,2} = 0 \]
                 \item 第一行其他的数： \[ \forall j : 2 < j \le n, m_{1,j} = \left[ 1 + m_{1,j-1}  \bmod (n-1)  \right] \]
                 \item 表中其他的数： \[ \forall i,j : i > 1, j > i, m_{i,j} = \left[ 1 + m_{i-1,j-1}  \bmod (n-1)  \right] \]
             \end{itemize}
-
-            \begin{algorithm}[H]
-                \caption{比赛安排}\label{0402:FillTable}
-                \begin{algorithmic}[1]
-                    \Require {$n$（参加比赛的人数）}
-                    \Ensure {$M[1\dots n][1\dots n]$（比赛的安排，$i$号选手与$j$号选手在第$M[i][j]$天比赛）}
-                    \State $M[1][2] \gets 0$
-                    \For {$j \gets 3$ to $n$}
-                    \State $M[1][j] \gets M[1][j-1] \bmod (n-1)$
-                    \EndFor
-                    \For {$i \gets 2$ to $n$}
-                    \For {$j \gets i+1$ to $n$}
-                    \State $M[i][j] \gets M[i-1][j] \bmod (n-1)$
-                    \EndFor
-                    \EndFor
-                \end{algorithmic}
-            \end{algorithm}
 
             由于第一行中只有$n-1$个数，所以恰能使用$[0, n-1)$中所有的数填满且不重复。
             由于每一列中最多只有$n-1$个数，且有循环递增关系，所以一定能使用$[0, n-1)$中的数填满而不产生重复。
@@ -119,6 +102,23 @@
             算法的时间复杂度为$O(n^2)$
         \end{solution}
 
+        \begin{algorithm}[!htp]
+            \caption{比赛安排}\label{0402:FillTable}
+            \begin{algorithmic}[1]
+                \Require {$n$（参加比赛的人数）}
+                \Ensure {$M[1\dots n][1\dots n]$（比赛的安排，$i$号选手与$j$号选手在第$M[i][j]$天比赛）}
+                \State $M[1][2] \gets 0$
+                \For {$j \gets 3$ to $n$}
+                \State $M[1][j] \gets M[1][j-1] \bmod (n-1)$
+                \EndFor
+                \For {$i \gets 2$ to $n$}
+                \For {$j \gets i+1$ to $n$}
+                \State $M[i][j] \gets M[i-1][j] \bmod (n-1)$
+                \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+
         \part 若比赛结果存放在一矩阵中，针对该矩阵设计$O(n \log n)$的算法，为各个选手赋予次序$P_i$，
         使得$P_1$打败$P_2$，$P_2$打败$P_3$，依此类推。
         \begin{solution}
@@ -127,6 +127,7 @@
             使用一种基于比较的排序算法（如快速排序），即可在$O(n\log n)$的时间内排除顺序。
         \end{solution}
     \end{parts}
+
 
     \question 数组$A$中包含$n$个互不相同的整数，用$O(n)$的时间找出$A$中最大的$i$个数，并按从大到小的次序输出（$i \leq n^{1/2}$）
     \begin{solution}

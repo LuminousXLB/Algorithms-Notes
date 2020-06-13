@@ -8,32 +8,48 @@
         重复该步骤$k$次，第$k$个数即为第$k$小的数。
         该算法的时间复杂度为$O(k)$
 
-        \begin{algorithm}[H]
-            \caption{归并取第$k$小的数}\label{0330:MeargeSmallestK}
-            \begin{algorithmic}[1]
-                \Require{数组$A[1 \dots p],B[1 \dots q]$；目标$k$} \Comment{$p+q = n \geq k$}
-                \Ensure{$A,B$中第$k$小的数$m$}
-                \State $cnt \gets 0, i \gets 1, j \gets 1$
-                \While {$cnt < k \wedge i \leq p \wedge j \leq q$}
-                \If {$A[i] < B[j]$}
-                \State $m \gets A[i], i \gets i + 1$
-                \Else
-                \State $m \gets B[j], j \gets j + 1$
-                \EndIf
-                \State $cnt \gets cnt + 1$
-                \EndWhile
+        \textbf{伪代码见算法\ref{0330:MeargeSmallestK}}
+    \end{solution}
 
-                \While {$cnt < k \wedge i < p$}
-                \State $m \gets A[i], i \gets i + 1$
-                \State $cnt \gets cnt + 1$
-                \EndWhile
+    \begin{algorithm}[!htp]
+        \caption{归并取第$k$小的数}\label{0330:MeargeSmallestK}
+        \begin{algorithmic}[1]
+            \Require{数组$A[1 \dots p],B[1 \dots q]$；目标$k$} \Comment{$p+q = n \geq k$}
+            \Ensure{$A,B$中第$k$小的数$m$}
+            \State $cnt \gets 0, i \gets 1, j \gets 1$
+            \While {$cnt < k \wedge i \leq p \wedge j \leq q$}
+            \If {$A[i] < B[j]$}
+            \State $m \gets A[i], i \gets i + 1$
+            \Else
+            \State $m \gets B[j], j \gets j + 1$
+            \EndIf
+            \State $cnt \gets cnt + 1$
+            \EndWhile
 
-                \While {$cnt < k \wedge j < q$}
-                \State $m \gets B[j], j \gets j + 1$
-                \State $cnt \gets cnt + 1$
-                \EndWhile
-            \end{algorithmic}
-        \end{algorithm}
+            \While {$cnt < k \wedge i < p$}
+            \State $m \gets A[i], i \gets i + 1$
+            \State $cnt \gets cnt + 1$
+            \EndWhile
+
+            \While {$cnt < k \wedge j < q$}
+            \State $m \gets B[j], j \gets j + 1$
+            \State $cnt \gets cnt + 1$
+            \EndWhile
+        \end{algorithmic}
+    \end{algorithm}
+
+
+    \question 如何修改KMP算法，使之能够获得字符串$B$在字符串$A$中出现的次数
+
+    \begin{solution}
+        给定原有算法，已经能找到一个$s$，使得$\forall 1 \leq i \leq m, A[s+i-1] = B[i]$。
+
+        如果存在一个$s' = s + \delta, 1 \leq \delta < m$，使得$\forall i \in [1,m], A[s'+i-1] = B[i]$
+        （即$A$中有两个重叠的$B$，重叠长度为$m - \delta$），
+        那么必然有即$\forall 1 \leq i \leq m-\delta, B[i] = B[i+\delta]$
+        （即$B$长度为$m-\delta$的前后缀是相等的）。
+
+        \textbf{伪代码见算法\ref{0330:CountableKMP}}
     \end{solution}
 
     \begin{algorithm}[!ht]
@@ -77,19 +93,6 @@
         \end{algorithmic}
     \end{algorithm}
 
-    \question 如何修改KMP算法，使之能够获得字符串$B$在字符串$A$中出现的次数
-
-    \begin{solution}
-        给定原有算法，已经能找到一个$s$，使得$\forall 1 \leq i \leq m, A[s+i-1] = B[i]$。
-
-        如果存在一个$s' = s + \delta, 1 \leq \delta < m$，使得$\forall i \in [1,m], A[s'+i-1] = B[i]$
-        （即$A$中有两个重叠的$B$，重叠长度为$m - \delta$），
-        那么必然有即$\forall 1 \leq i \leq m-\delta, B[i] = B[i+\delta]$
-        （即$B$长度为$m-\delta$的前后缀是相等的）。
-
-        \textbf{伪代码见算法\ref{0330:CountableKMP}}
-    \end{solution}
-
     \question 设计高效算法求序列$T$和$P$的最长公共子序列和最短公共超序列的长度。
     \begin{parts}
         \part 最长公共子序列（LCS）$L$定义为$T$和$P$的共同子序列中最长的一个
@@ -105,31 +108,31 @@
                 \end{cases}
             \]
 
-            可用动态规划的方法解决此问题。
+            可用动态规划的方法解决此问题，伪代码见算法\ref{0330:LCS}
             该算法的时间复杂度为$O(|T \times P|)$，空间复杂度为$O(\min\left\{|T|, |P|\right\})$。
 
-
-            \begin{algorithm}[H]
-                \caption{最长公共子序列的长度}\label{0330:LCS}
-                \begin{algorithmic}[1]
-                    \Require $P[1 \dots m], T[1 \dots n]$（两个序列） \Comment{不妨设$m \ge n$}
-                    \Ensure $l$（$T,P$的最长公共子序列的长度）
-                    \State $dp[0 \dots 1][0 \dots n] \gets \left\{ 0 \right\}$
-                    \For {$i \gets 1$ to $m$}
-                    \For {$j \gets 1$ to $n$}
-                    \If{$T[i] = P[j]$}
-                    \State $dp[i \bmod 2][j] \gets dp[(i-1) \bmod 2][j-1] + 1$
-                    \ElsIf {$dp[i \bmod 2][j-1] \ge dp[(i-1) \bmod 2][j]$}
-                    \State $dp[i \bmod 2][j] \gets dp[i \bmod 2][j-1]$
-                    \Else
-                    \State $dp[i \bmod 2][j] \gets dp[(i-1) \bmod 2][j]$
-                    \EndIf
-                    \EndFor
-                    \EndFor
-                    \State \Return $dp[m \bmod 2][n]$
-                \end{algorithmic}
-            \end{algorithm}
         \end{solution}
+
+        \begin{algorithm}[!htp]
+            \caption{最长公共子序列的长度}\label{0330:LCS}
+            \begin{algorithmic}[1]
+                \Require $P[1 \dots m], T[1 \dots n]$（两个序列） \Comment{不妨设$m \ge n$}
+                \Ensure $l$（$T,P$的最长公共子序列的长度）
+                \State $dp[0 \dots 1][0 \dots n] \gets \left\{ 0 \right\}$
+                \For {$i \gets 1$ to $m$}
+                \For {$j \gets 1$ to $n$}
+                \If{$T[i] = P[j]$}
+                \State $dp[i \bmod 2][j] \gets dp[(i-1) \bmod 2][j-1] + 1$
+                \ElsIf {$dp[i \bmod 2][j-1] \ge dp[(i-1) \bmod 2][j]$}
+                \State $dp[i \bmod 2][j] \gets dp[i \bmod 2][j-1]$
+                \Else
+                \State $dp[i \bmod 2][j] \gets dp[(i-1) \bmod 2][j]$
+                \EndIf
+                \EndFor
+                \EndFor
+                \State \Return $dp[m \bmod 2][n]$
+            \end{algorithmic}
+        \end{algorithm}
 
         \part 最短公共超序列（SCS）$S$定义为所有以$T$和$P$为子序列的序列中最短的一个
         \begin{solution}
@@ -157,27 +160,28 @@
         扫描整个数组，到第$i$个数时，计算$r := x - A[i]$。
         若$r$不在哈希表中，记$H[r] = i$；否则有$A[i] + A\left[H[r]\right] = x$。
         哈希表查找和插入的时间复杂度为$O(1)$，所以遍历整个数组的时间复杂度为$O(n)$。
+        伪代码见算法\ref{0330:Composite1}
+    \end{solution}
 
-        \begin{algorithm}[H]
-            \caption{求补1}\label{0330:Composite1}
-            \begin{algorithmic}[1]
-                \Require{ $A[1 \dots n]$（被查找的数组） }
-                \Ensure{ 是否存在两个数之和恰好等于$x$ }
-                \State $H \gets \mathsf{Hashmap}(n)$
-                \For {$i \gets 1$ to $n$}
-                \State $r \gets x - A[i]$
-                \If {$H.contains(r)$}
-                \State \Return \textsf{true} \Comment{此时$A[i] + A\left[H[r]\right] = x$}
-                \Else
-                \State $H[r] \gets i$
-                \EndIf
-                \EndFor
-                \State \Return \textsf{false}
-            \end{algorithmic}
-        \end{algorithm}
-        % \end{solution}
+    \begin{algorithm}[!htp]
+        \caption{求补1}\label{0330:Composite1}
+        \begin{algorithmic}[1]
+            \Require{ $A[1 \dots n]$（被查找的数组） }
+            \Ensure{ 是否存在两个数之和恰好等于$x$ }
+            \State $H \gets \mathsf{Hashmap}(n)$
+            \For {$i \gets 1$ to $n$}
+            \State $r \gets x - A[i]$
+            \If {$H.contains(r)$}
+            \State \Return \textsf{true} \Comment{此时$A[i] + A\left[H[r]\right] = x$}
+            \Else
+            \State $H[r] \gets i$
+            \EndIf
+            \EndFor
+            \State \Return \textsf{false}
+        \end{algorithmic}
+    \end{algorithm}
 
-        % \begin{solution}
+    \begin{solution}
         \textsf{解2}
         将数组中的所有数分成两个堆，超过$x/2$的所有数插入最大化堆$S$，不足$x/2$的所有数插入最小化堆$I$。
         去两个堆最顶端的数$s,i$的和并与$x$比较：
@@ -191,39 +195,41 @@
             a \log a + (n-a) \log (n-a) \le a \log n + (n-a) \log n = n \log n
         \]
         所以该算法的时间复杂度为$O(n\log n)$。
+        伪代码见算法\ref{0330:Composite2}
 
-        \begin{algorithm}[H]
-            \caption{求补2}\label{0330:Composite2}
-            \begin{algorithmic}[1]
-                \Require{ $A[1 \dots n]$（被查找的数组） }
-                \Ensure { 是否存在两个数之和恰好等于$x$ }
-                \State $S \gets MaximizeHeap(), I \gets MinimizeHeap(), halfcnt \gets 0$
-                \For {$i \gets 1$ to $n$} \Comment{建堆}
-                \If {$2A[i] > x$}
-                \State $S.Push(A[i])$
-                \ElsIf {$2A[i] < x$}
-                \State $I.Push(A[i])$
-                \Else \Comment{$2A[i] = x$}
-                \State $halfcnt \gets halfcnt + 1$
-                \EndIf
-                \EndFor
-                \If {$halfcnt \ge 2$} \Comment{数组中恰好存在2个或更多$x/2$}
-                \State \Return \textsf{true}
-                \EndIf
-                \While {$\neg S.empty \wedge \neg I.empty$} \Comment{出堆}
-                \State $s \gets S.top, i \gets I.top$ \Comment{取堆顶的元素}
-                \If {$s+i > x$}
-                \State $S.Pop()$
-                \ElsIf {$s+i < x$}
-                \State $I.Pop()$
-                \Else \Comment{$s+i = x$}
-                \State \Return \textsf{true}
-                \EndIf
-                \EndWhile
-                \State \Return \textsf{false}
-            \end{algorithmic}
-        \end{algorithm}
     \end{solution}
+
+    \begin{algorithm}[!htp]
+        \caption{求补2}\label{0330:Composite2}
+        \begin{algorithmic}[1]
+            \Require{ $A[1 \dots n]$（被查找的数组） }
+            \Ensure { 是否存在两个数之和恰好等于$x$ }
+            \State $S \gets MaximizeHeap(), I \gets MinimizeHeap(), halfcnt \gets 0$
+            \For {$i \gets 1$ to $n$} \Comment{建堆}
+            \If {$2A[i] > x$}
+            \State $S.Push(A[i])$
+            \ElsIf {$2A[i] < x$}
+            \State $I.Push(A[i])$
+            \Else \Comment{$2A[i] = x$}
+            \State $halfcnt \gets halfcnt + 1$
+            \EndIf
+            \EndFor
+            \If {$halfcnt \ge 2$} \Comment{数组中恰好存在2个或更多$x/2$}
+            \State \Return \textsf{true}
+            \EndIf
+            \While {$\neg S.empty \wedge \neg I.empty$} \Comment{出堆}
+            \State $s \gets S.top, i \gets I.top$ \Comment{取堆顶的元素}
+            \If {$s+i > x$}
+            \State $S.Pop()$
+            \ElsIf {$s+i < x$}
+            \State $I.Pop()$
+            \Else \Comment{$s+i = x$}
+            \State \Return \textsf{true}
+            \EndIf
+            \EndWhile
+            \State \Return \textsf{false}
+        \end{algorithmic}
+    \end{algorithm}
 
     \question 每个螺母需要一个螺栓配套使用，现有$n$个不同尺寸的螺母和相应的$n$个螺栓，如何快速地为为每一个螺母找到对应的螺栓？
     只能将一个螺母与一个螺栓进行匹配尝试，从而知道相互之间的大小关系，
@@ -277,28 +283,10 @@
              & = n\log{n} - \frac{1}{2} (\log n)^2 + \frac{1}{2} (\log n) = O(n \log n)
         \end{align*}
 
-        % 此时，剩余的元素数量有$n - \frac{(1+k)k}{2}$。使拆分结束，必然有\begin{align*}
-        %     0 < n - \frac{(1+k)k}{2} \le 2^k
-        %     \Rightarrow k(k+1) < 2n & \le 2^{k+1} + (1+k)k              \\
-        %     k^2 < k(k+1) < 2n       & \le 2^{k+1} + k^2 + k \le 2^{k+2} \\
-        %     \frac{1}{2} k^2 < n     & \le 2^{k+1}                       \\
-        %     \log n - 1 \le k        & < \sqrt{n}
-        % \end{align*}
-        % 所以总的比较次数为\begin{align*}
-        %     \sum_{i = 0}^{k-1} {(n-i)} = \frac{k\left[n+n-(k-1)\right]}{2}
-        %      & = - \frac{1}{2} k^2 + (n + \frac{1}{2}) k                  \\
-        %      & = - \frac{1}{2} k \left[ k - 2 (n + \frac{1}{2}) \right]   \\
-        %      & = - \frac{1}{2} k \left[ k - (2 n + 1) \right] \\
-        % \end{align*}
-        % \[
-        %     - \frac{1}{2} (\log{n})^2 + (n + \frac{1}{2}) \log{n}
-        %       \le T(n) \le - \frac{1}{2} n + (n + \frac{1}{2}) \sqrt{n}
-        % \]
-        % 所以$T(n) = \Omega(n\log n)$ $T(n) = O(n^{3/2})$
     \end{solution}
 
 
-    \begin{algorithm}[H]
+    \begin{algorithm}[!htp]
         \caption{螺栓螺母配对}\label{0330:Pairwise}
         \begin{algorithmic}[1]
             \Require{ $X[1 \dots n]$（螺栓），$Y[1 \dots n]$（螺母） }
