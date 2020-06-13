@@ -1,0 +1,155 @@
+\section{0402}\label{sec:0402}
+\begin{questions}
+
+    \question 用分治法找到数组中的最大数和最小数，若数组规模为2的幂，证明需要的比较次数为$\frac{3}{2} n -2$
+    \begin{solution}
+        易判断初始条件$T(1) = 0, T(2) = 1$，
+        且有递推关系
+        \[ T(n) = T(2^m) = 2T(2^{m-1}) + 2 \Rightarrow T(2^m) + 2 = 2T(2^{m-1}) + 4 \]
+        即
+        \[ \frac{T(2^m) + 2}{T(2^{m-1}) + 2} = 2 \]
+
+        所以当$m \ge 1$时，$T(2^m) + 2 = 3 \cdot 2^{m-1}$，
+        可得$T(2^m) = \begin{cases}
+                3 \cdot 2^{m-1} - 2 & , m \ge 1 \\
+                1                   & , m = 0
+            \end{cases}
+        $
+
+        即
+        \[
+            T(n) = \begin{cases}
+                \frac{3}{2} n - 2 & , n \ge 2 \\
+                1                 & , n = 1
+            \end{cases}
+        \]
+    \end{solution}
+
+    \question 对于任意给定的4个1-10之间的整数（可以相同），判断是否可以通过整数四则运算得到24
+    \begin{solution}
+        % TODO: complete this
+        我们将运算中不具有交换律的情况算作两种运算，并规定$x_1 \leq x_2$，使两个数构成有序数对。
+        则任一个有序数对的两个数之间可能有$6$种运算，即 \[
+            x_1 + x_2 \quad x_1 \cdot x_2 \quad x_1 - x_2 \quad x_2 - x_1 \quad x_1 / x_2 \quad x_2 / x_1
+        \]
+        记$Q(a,b)$为$a$与$b$进行这$6$种计算得到的所有结果的集合，$|Q(a,b)| \le 6$。
+
+        记$J(A,B,O,n)$为判断是否存在$A$中的某个数能和$B$中的某个数通过$O$中的运算直接得到$n$。
+        对于每一种运算，使用类似于算法\ref{0330:Composite1}中的算法，
+        首先扫描一遍较小的数组并在哈希表中记录下互补的值，然后扫描另一个数组看是否存在于哈希表中。
+        这一部分需要进行$\min\left\{ |A|, |B| \right\}$次计算和$\max\left\{ |A|, |B| \right\}$次哈希表查找。
+        所以$J(A,B)$的时间复杂度为$|O|(|A| + |B|)$。
+
+        4个数的结合次序有两种，可表示为后缀表达式
+        \begin{itemize}
+            \item $(x_1, x_2, op_1, x_3, x_4, op_2, op_3)$：
+                  4个数两两一组分为2组共有$\frac{\binom{4}{2} + \binom{2}{2}}{2}=3$种分组方式。
+                  所以讨论全部结果需要执行3次\[
+                      J\left( Q(x_1,x_2), Q(x_3, x_4), \left\{+, \times, -, \div, \hat{-} , \hat{\div} \right\}, 24 \right)
+                  \]
+                  总的运算次数为$3 \times 6 \times 12 = 216$
+            \item $(x_1, x_2, x_3, x_4, op_1, op_2, op_3)$：
+                  此时若$op_2$与$op_3$的运算顺序是可交换的，则与上一种情况相同。
+                  \begin{itemize}
+                      \item $op_2, op_3$同为加、减法（可通过增减括号后等价）
+                      \item $op_2, op_3$同为乘、除法
+                  \end{itemize}
+                  因此，给定$op_2$后，$op_3$只有3种选择
+                  排列方式共有$\binom{4}{2}\binom{2}{1} = 12$种。
+                  \[
+                      J\left(Q(Q(x_3, x_4), x_2), \left\{x_1\right\}, \left\{+, -, \hat{-}\right\}, 24\right)
+                  \]
+                  $Q(x_3, x_4)$的运算结果可由上一种情况的运算结果查表得到。
+                  运算次数为$12 \times 6^2 \times 3 = 1296$次
+        \end{itemize}
+
+        总运算次数为$1512$。
+    \end{solution}
+
+    \question 有$n=2^k$位选手参加一项单循环比赛，即每位选手都要与其他$n-1$位选手比赛，且在$n-1$天内每人每天进行一场比赛
+    \begin{parts}
+        \part 设计算法以得到赛程安排
+        \begin{solution}
+            赛程安排可表示为表格$M$如下（以$k=2$为例）：
+            \begin{center}
+                \begin{tabular}{c|cccc}
+                      & 1        & 2        & 3        & 4        \\
+                    \hline
+                    1 & $\times$ & 0        & 1        & 2        \\
+                    2 & $-$      & $\times$ & 2        & 0        \\
+                    3 & $-$      & $-$      & $\times$ & 1        \\
+                    4 & $-$      & $-$      & $-$      & $\times$ \\
+                \end{tabular}
+            \end{center}
+            上表中，$m_{1,2} = 0$表示1号选手和2号选手在第0天进行一场比赛。
+            由于自己不能和自己比赛，所以对角线上的值是无意义的。
+            同时表格中的值应关于对角线对称，所以只需考虑对角线一侧的值（这里只考虑上方）。
+            因此只要以某种算法，使用$[0, n-1)$中的整数填写上表，使每行、每列都不存在重复的数即可。
+
+            填写表格方法为：%（算法\ref{0402:FillTable}）：
+            \begin{itemize}
+                \item 第一个数：\[ m_{1,2} = 0 \]
+                \item 第一行其他的数： \[ \forall j : 2 < j \le n, m_{1,j} = \left[ 1 + m_{1,j-1}  \bmod (n-1)  \right] \]
+                \item 表中其他的数： \[ \forall i,j : i > 1, j > i, m_{i,j} = \left[ 1 + m_{i-1,j-1}  \bmod (n-1)  \right] \]
+            \end{itemize}
+
+            \begin{algorithm}[H]
+                \caption{比赛安排}\label{0402:FillTable}
+                \begin{algorithmic}[1]
+                    \Require {$n$（参加比赛的人数）}
+                    \Ensure {$M[1\dots n][1\dots n]$（比赛的安排，$i$号选手与$j$号选手在第$M[i][j]$天比赛）}
+                    \State $M[1][2] \gets 0$
+                    \For {$j \gets 3$ to $n$}
+                    \State $M[1][j] \gets M[1][j-1] \bmod (n-1)$
+                    \EndFor
+                    \For {$i \gets 2$ to $n$}
+                    \For {$j \gets i+1$ to $n$}
+                    \State $M[i][j] \gets M[i-1][j] \bmod (n-1)$
+                    \EndFor
+                    \EndFor
+                \end{algorithmic}
+            \end{algorithm}
+
+            由于第一行中只有$n-1$个数，所以恰能使用$[0, n-1)$中所有的数填满且不重复。
+            由于每一列中最多只有$n-1$个数，且有循环递增关系，所以一定能使用$[0, n-1)$中的数填满而不产生重复。
+            由于第一行从左到右有循环递增关系，第二行的值为第一行对应的值$+1$，所以行中的递增关系保持，即每一行中也没有重复的数。
+            因此由此方法填写的表格满足要求。
+
+            该表格中安排了$\frac{n^2 - n}{2} = 2^{k-1}(n - 1)$，满足每天$k$场比赛，$n-1$天恰好比完。
+            算法的时间复杂度为$O(n^2)$
+        \end{solution}
+
+        \part 若比赛结果存放在一矩阵中，针对该矩阵设计$O(n \log n)$的算法，为各个选手赋予次序$P_i$，
+        使得$P_1$打败$P_2$，$P_2$打败$P_3$，依此类推。
+        \begin{solution}
+            对于任意两个选手$i,j$，定义若$i$赢了$j$则$i<j$。
+            由于每两个人之间都有一场比赛，所以任意两个人之间都可以按上述定义比较大小，该大小关系可以通过查询比赛结果的数组得到。
+            使用一种基于比较的排序算法（如快速排序），即可在$O(n\log n)$的时间内排除顺序。
+        \end{solution}
+    \end{parts}
+
+    \question 数组$A$中包含$n$个互不相同的整数，用$O(n)$的时间找出$A$中最大的$i$个数，并按从大到小的次序输出（$i \leq n^{1/2}$）
+    \begin{solution}
+        首先使用自底向上的方法建最大堆，然后出堆$i$次。
+
+        \begin{itemize}
+            \item 自底向上建堆过程中，每一步比较的次数最多是该节点高度的2倍。
+                  对于高度为$i$的节点，记其所有子节点的高度和为$H(i)$，则有
+                  \begin{align*}
+                      H(i) = 2H(i-1) + 1 \xRightarrow{H(0) = 0} H(i) = 2^{i+1} - i - 2
+                  \end{align*}
+                  而$n$个节点的最大高度为$\log n$，所以这一部分的时间复杂度为\[
+                      T_1(n) = 4n - 2 \lceil \log n \rceil - 4
+                  \]
+            \item 出堆$i$次所需的时间$ T_2(i) \le i \log n $。
+        \end{itemize}
+        所以整体的时间复杂度\begin{align*}
+            T(n, i) = T_1(n) + T_2(i) & \le (4n - 2\lceil \log n \rceil - 4) + i \log n             \\
+                                      & \le 4n - 2\lceil \log n \rceil - 4 + \sqrt{n} \log n        \\
+                                      & \le 4n - 2\lceil \log n \rceil - 4 + \sqrt{n} \cdot n^{1/2} \\
+                                      & = 5n - 2\lceil \log n \rceil - 4 = O(n)
+        \end{align*}
+
+    \end{solution}
+
+\end{questions}
