@@ -5,35 +5,52 @@
     \question $k$为正常数，证明$\log{n} = o(n^k)$
     \begin{solution}
         \begin{proof}
-            只须证$\lim_{n \rightarrow + \infty} \frac{f(n)}{g(n)} = 0 $
+            只须证\[
+                \lim_{n \rightarrow + \infty} \frac{ \log_m n }{ n^k } = 0
+            \]
+            即证\[
+                \lim_{n \rightarrow + \infty} \frac{ \ln n }{ n^k \ln m } = 0
+            \]
+
+            应用洛必达法则，有\begin{align*}
+                \lim_{n \rightarrow + \infty} \frac{ \ln n }{ n^k \ln m }
+                 & = \lim_{n \rightarrow + \infty} \frac{ 1/ n }{ k n^{k-1} \ln m } \\
+                 & = \lim_{n \rightarrow + \infty} \frac{ 1 }{ k n^{k} \ln m } = 0
+            \end{align*}
+
+            所以\[
+                \log{n} = o(n^k)
+            \]
         \end{proof}
     \end{solution}
 
-    % \begin{solution}
-    %     \begin{proof}
-    %         \begin{enumerate}
-    %             \item 当$0 < m < 1$时，$\forall c > 0, n > 1, k > 0$ $$
-    %                       \log_m{n} < 0 < c n^k
-    %                   $$
-    %             \item 当$m > 1$时，令\begin{align*}
-    %                       f(x)  & = \frac{\log_m{x}}{x^k}             \\
-    %                       f'(x) & = \frac{1-k \ln{x}}{ x^{k+1} \ln{m} }
-    %                   \end{align*}
-    %                   由$k>0$，$\ln m>0$可知，当$x>0$时，$f'(x) < 0$，$f(x)$单调递减
+    \begin{solution}
+        \begin{proof}
+            \begin{enumerate}
+                \item 当$0 < m < 1$时，$\forall c > 0, n > 1, k > 0$ $$
+                          \log_m{n} < 0 < c n^k
+                      $$
+                \item 当$m > 1$时，令\[
+                          f(x) = \frac{\log_m{x}}{ x^k }
+                          \quad \Longrightarrow \quad
+                          \ln{m} \cdot f'(x) = \frac{1 - k \ln{x}}{ x^{k+1}  }
+                      \]
+                      由$k > 0$，$\ln m > 0$可知，当$x > e^{1/k}$时，$f'(x) < 0$，$f(x)$单调递减
 
-    %                   $\forall c > 0, \exists N = m^c > 0$，使得当$n > N$时 $$
-    %                       f(n) < f(N) =\frac{\log_m{m^c}}{m^{ck}} = \frac{c}{m^{ck}}
-    %                   $$
-    %                   由$ck>0$，$m>1$可知，$m^{ck} > 1$
-    %                   \begin{align*}
-    %                       c \cdot m^{ck} & > c                                                      \\
-    %                       c              & > \frac{c}{m^{ck}} = f(N) > f(n) = \frac{\log_m{n}}{n^k} \\
-    %                       \log_m{n}      & < c n^k
-    %                   \end{align*}
-    %                   所以$$\log_m{n} = o(n^k)$$
-    %         \end{enumerate}
-    %     \end{proof}
-    % \end{solution}
+                      $\forall c > 0, \exists N > \max\left\{ m^c, e^{1/k} \right\}  > 0$，
+                      使得当$n > N$时 $$
+                          f(n) < f(m^c) =\frac{\log_m{m^c}}{m^{ck}} = \frac{c}{m^{ck}}
+                      $$
+                      由$ck>0$，$m>1$可知，$m^{ck} > 1$
+                      \begin{align*}
+                          c \cdot m^{ck} & > c                                                      \\
+                          c              & > \frac{c}{m^{ck}} = f(N) > f(n) = \frac{\log_m{n}}{n^k} \\
+                          \log_m{n}      & < c n^k
+                      \end{align*}
+                      所以$$\log_m{n} = o(n^k)$$
+            \end{enumerate}
+        \end{proof}
+    \end{solution}
 
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -85,6 +102,36 @@
 
         综合可知，对于上述$f(n),g(n)$，$f(n)=O(g(n))$和$g(n)=O(f(n))$都不成立
     \end{solution}
+
+
+    \begin{solution}
+        官方解答：
+        \begin{enumerate}
+            \item \[
+                      f(n) = \begin{cases}
+                          n!     & , n\text{为奇数} \\
+                          (n+1)! & , n\text{为偶数}
+                      \end{cases}, \quad
+                      g(n) = \begin{cases}
+                          (n+1)! & , n\text{为奇数} \\
+                          n!     & , n\text{为偶数}
+                      \end{cases}
+                  \]
+            \item \[
+                      f(n) = \begin{cases}
+                          f(n-1) + 1          & , n\text{为奇数} \\
+                          f(n-1) + (g(n-1))^2 & , n\text{为偶数}
+                      \end{cases}, \quad
+                      g(n) = \begin{cases}
+                          g(n-1) + (f(n-1))^2 & , n\text{为奇数} \\
+                          g(n-1) + 1          & , n\text{为偶数}
+                      \end{cases}
+                  \]
+        \end{enumerate}
+
+
+    \end{solution}
+
 
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -139,6 +186,9 @@
         \end{solution}
         \part 可以用$O$,$\Omega$,$\Theta$表示算法的运行时间吗？
         \begin{solution}
+            \textbf{
+                \color{red} CONFUSED
+            }
             \begin{itemize}
                 \item 最好情况：$$n-1 = O(n) = \Omega(n) = \Theta(n)$$
                 \item 最坏情况：$$\frac{1}{2}(n^2-n) = O(n^2) = \Omega(n^2) = \Theta(n^2)$$
