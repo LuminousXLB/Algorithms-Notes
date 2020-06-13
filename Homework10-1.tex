@@ -1,0 +1,65 @@
+\section{0420}\label{sec:0420}
+\begin{questions}
+
+    \question 设计算法判定平面上$n$个点是否在一条直线上
+
+    \begin{solution}
+        任选一点$p_0(x_0,y_0)$作为基准点。
+        对其他$n-1$个点，计算其相对于点$p_0$的斜率。
+        若所有的斜率都相等，则这$n$个点在同一条直线上。
+
+        该算法具有线性时间复杂度。
+    \end{solution}
+
+    \question 设$P$是包围在给定矩形$R$中的一个简单多边形，$q$为$R$中任意一点。
+    设计高效算法寻找连接$q$和$R$外部一点的线段，使得该线段与$P$相交的边的数量最少。
+
+    \begin{solution}
+        将该多边形表示为用邻接表存储的图$G=(V,E)$，设有$n$个顶点$n$条边，图中每个顶点的度数均为$2$。
+        以$q$为坐标原点建立极坐标系，求出每个顶点的极坐标$(\rho, \theta)$，并按极角$\theta$的大小排序。
+        应用扫描线算法，事件点进度表按极角排序的所有顶点，扫描线状态为与射线$\theta = \alpha$相交的边集。
+
+        见算法\ref{alg:0420:q1}
+    \end{solution}
+
+    \begin{algorithm}[!t]
+        \caption{最小相交边数量}\label{alg:0420:q1}
+        \begin{algorithmic}[1]
+            \Require { $G = (V,E)$（给定多边形$P$），$q$（给定矩形$R$内的一点） }
+            \Ensure { $ \gamma $ （射线$\theta = \gamma$与$P$相交的边数量最少） } \Comment{ 在该射线上任取$R$外的一点即满足题设 }
+            \State 以$q$为坐标原点，$x$轴正方向为极轴，建立极坐标系，并求各顶点的极坐标 \Comment{$O(n)$}
+            \State $Q \gets \Call{MinHeap}{V, \theta}$ \Comment{ 对顶点按极角构建最小化堆，$O(n)$ }
+            \State $S \gets \Phi, count \gets 0$
+            \For {$(v,w)$ in $E$} \Comment{ 找出多边形$P$与射线$\theta = 0$相交的所有边，$O(n)$ }
+            \If { $\sin (v.\theta) \sin (w.\theta) < 0 \wedge q.x < \frac{q.y - w.y}{v.y - w.y} (v.x - w.x) + w.x$ }
+            \Statex \Comment{两点在极轴上下两侧，且与直线$y=q.y$的交点在$q.x$的右侧}
+            \State $S \gets S \cup \left\{ (v,w) \right\}, count \gets count + 1$
+            \EndIf
+            \EndFor
+            \State $minCount \gets count, \alpha \gets 0, \beta \gets 0$
+            \While {$p \gets \Call{Heap.Pop}{Q}$} \Comment{扫描线：按极角升序遍历所有顶点，$O(n \log n)$}
+            \State $s,t \gets \Call{Adjacency}{G,p}$ \Comment{从邻接矩阵中找$p$的两个相邻顶点，$O(1)$}
+            \If { $(p,s) \in S \wedge (p,t) \in S$ } \Comment{扫描线越过顶点$p$后，两条边都不与扫描线相交}
+            \State $S \gets S - \left\{ (p,s), (p,t) \right\}$
+            \State $count \gets count - 2$
+            \If {$count < minCount$}
+            \State $minCount \gets count$
+            \State $\alpha \gets p.\theta, \beta \gets p.\theta$
+            \EndIf
+            \ElsIf { $(p,s) \in S \wedge (p,t) \notin S$ } \Comment{扫描线越过顶点$p$后，与另一条边相交}
+            \State $S \gets S \cup \left\{(p,t)\right\} - \left\{ (p,s)\right\}$
+            \ElsIf { $(p,s) \notin S \wedge (p,t) \in S$ }
+            \State $S \gets S \cup \left\{(p,s)\right\} - \left\{ (p,t)\right\}$
+            \ElsIf { $(p,s) \notin S \wedge (p,t) \notin S$ } \Comment{扫描线越过顶点$p$后，两条边都与扫描线相交}
+            \State $S \gets S \cup \left\{ (p,s), (p,t) \right\}$
+            \State $count \gets count + 2$
+            \State $\beta \gets p.\theta $ if $\alpha = \beta$ else $\beta$
+            \EndIf
+            \EndWhile
+
+            \State $\gamma \gets \frac{\alpha + \beta}{2}$ if $\alpha \ne \beta$ else $\frac{\alpha + 2\pi}{2}$
+
+        \end{algorithmic}
+    \end{algorithm}
+
+\end{questions}

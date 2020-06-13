@@ -1,0 +1,63 @@
+\section{0507}\label{sec:0507}
+\begin{questions}
+    \question 设有复数$x=a+b \bm i$和$y=c+d \bm i$，设计算法，只用3次乘法计算乘积$xy$
+    \begin{solution}
+        \[
+            xy = (a+b \bm i) (c+d \bm i) = (ac-bd) + (ad+cb) \bm i
+        \]
+        \begin{enumerate}
+            \item $A = ad                             $
+            \item $B = bc                             $
+            \item $C = (a+b)(c-d) = ac - ad + bc - bd $
+        \end{enumerate}
+        \begin{align*}
+            ac-bd & = C + A - B \\
+            ad+cb & = A + B
+        \end{align*}
+    \end{solution}
+
+    \question 设$P$是一个$n$位十进制正整数。
+    如果将$P$划分为$k$段，则可得到$k$个正整数，这$k$个正整数的乘积称为$P$的一个$k$乘积。
+    \begin{parts}
+        \part 求出$1234$的所有$2$乘积
+        \begin{solution}
+            \begin{align*}
+                1 \times 234 & = 234  \\
+                12 \times 34 & =  408 \\
+                123 \times 4 & =  492
+            \end{align*}
+        \end{solution}
+
+        \part 对于给定的$P$和$k$，求出$P$的最大$k$乘积的值
+        \begin{solution}
+            使用动态规划求解。
+            设$Num(n, i)$是整数$n$的最低$i$位构成的数。
+            设$Prod(n,k)$是整数$n$的最大$k$乘积。
+            则\[
+                Prod(n,k) = \begin{cases}
+                    n                                          & , k = 1 \\
+                    Num(n,i) \cdot \max_{i} Prod(Num(n,i),k-1) & , k > 1
+                \end{cases}
+            \]
+
+
+        \end{solution}
+    \end{parts}
+
+    \question 分析在一般微机上如何计算二项式系数$C_n^k$
+    \begin{solution}
+        \begin{algorithmic}[1]
+            \Require {正整数$n,k$}
+            \Ensure {$C_n^k$}
+            \State $result \gets 1$
+            \State $k \gets \min(k, n-k)$
+            \For {$i \gets 1$ to $k$}
+            \State $result \gets result \times (n-i+1)$
+            \State $result \gets result \div i$
+            \EndFor
+            \State \Return $result$
+        \end{algorithmic}
+    \end{solution}
+
+
+\end{questions}
