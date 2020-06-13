@@ -35,17 +35,25 @@
             设$Prod(n,k)$是整数$n$的最大$k$乘积。
             则\[
                 Prod(n,k) = \begin{cases}
-                    n                                          & , k = 1 \\
-                    Num(n,i) \cdot \max_{i} Prod(Num(n,i),k-1) & , k > 1
+                    n                                                           & , k = 1 \\
+                    \max_{i} \left\{ \frac{n-Num(n,i)}{10^i} \cdot Prod(Num(n,i),k-1) \right\} & , k > 1
                 \end{cases}
             \]
-
 
         \end{solution}
     \end{parts}
 
     \question 分析在一般微机上如何计算二项式系数$C_n^k$
     \begin{solution}
+    算法见\ref{0507:comb}
+
+        亦可使用杨辉三角，$$C_{n}^{k}=C_{n-1}^{k-1}+C_{n-1}^{k}$$，
+        这是一个$O(n^2)$的算法，可以最大限度避免溢出。
+        但实验显示，算法 \ref{0507:comb} 在避免溢出方便仅比基于杨辉三角递归差了一丢丢。
+    \end{solution}
+
+    \begin{algorithm}[!htp]
+        \caption{组合数}\label{0507:comb}
         \begin{algorithmic}[1]
             \Require {正整数$n,k$}
             \Ensure {$C_n^k$}
@@ -57,7 +65,6 @@
             \EndFor
             \State \Return $result$
         \end{algorithmic}
-    \end{solution}
-
+    \end{algorithm}
 
 \end{questions}
