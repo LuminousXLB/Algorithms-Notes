@@ -97,31 +97,10 @@
                 解决汉诺塔问题首要的是注意到当只有两个圆盘存在时问题的解决是十分简单的。
                 因此当解决有多个圆盘的汉诺塔问题时，可以将其中一部分圆盘看作是一个圆盘，另一部分圆盘看作是另一个圆盘，然后就可以应用两个圆盘的解法解决该问题，此时移动的每一步都是一个规模更小的汉诺塔问题。
                 最后要注意到分组时必须将最大的圆盘单独放在一组，其他的圆盘单独放在一组，方可保证在移动的过程中任一桩子上的圆盘都满足大小自下而上递减。
-                \begin{algorithm}[H]
-                    \caption{汉诺塔}
-                    \begin{algorithmic}[1]
-                        \Require {
-                            三个栈$a, b, c$，
-                            其中$a$中从栈顶到栈底为$0$到$n-1$共$n$个元素，$b,c$为空栈
-                        }
-                        \Procedure{Main}{}
-                        \State\Call{Hanoi}{$a , b , c , n$}
-                        \EndProcedure
-                        \Statex
-                        \Procedure{Hanoi}{$src , via , dst , n$}
-                        \Statex
-                        \Comment{解决以$via$为中介，从$src$的顶端移$n$个圆盘到$dst$上的汉诺塔问题}
-                        \If{$n=1$}
-                        \State $dst$.push($src$.pop()) \Comment{从$src$上取出最顶端的圆盘，放到$dst$上}
-                        \Else
-                        \State \Call{Hanoi}{$src , dst , via , n-1$}
-                        \State \Call{Hanoi}{$src , via , dst , 1$}
-                        \State \Call{Hanoi}{$via , src , dst , n-1$}
-                        \EndIf
-                        \EndProcedure
-                    \end{algorithmic}
-                \end{algorithm}
+
+                \textbf{伪代码见算法\ref{0319:Hanoi}}
             }
+
             \part {
             由上述算法描述可知，解决$n$个圆盘的汉诺塔问题需要移动圆盘的次数$T(n)$符合表达式$$
                 T(n) = \begin{cases}
@@ -145,33 +124,57 @@
             当$b_i$从$0$变为$1$时，恰好是第$i$个盘子从其$src$移到$dst$上的结果，此时问题$H(i)$恰好执行了$2^i$步。
             因此$N = \sum_{i=1}^n{b_i \cdot 2^{i-1}}$可表示到此状态时已经经过的步数。
 
-            \begin{algorithm}[H]
-                \caption{检查汉诺塔状态}
-                \begin{algorithmic}[1]
-                    \Require { 数组$p[0..n-1]$表示用上述算法解决$n$个圆盘的汉诺塔问题的一个中间状态 }
-                    \Ensure { 到达这一状态经过的步数$N$，如果该状态非法则为$-1$ }
-                    \State $src \gets 1, via \gets 2, dst \gets 3$
-                    \State $N \gets 0$
-                    \For {$i \gets n-1$ downto $0$}
-                    \If {$p[i] = src$}
-                    \State $N \gets 2N + 0$
-                    \State \Call{Swap}{$dst, via$}
-                    \ElsIf {$p[i] = dst$}
-                    \State $N \gets 2N + 1$
-                    \State \Call{Swap}{$src, via$}
-                    \Else
-                    \State \Return $-1$
-                    \EndIf
-                    \EndFor
-                    \State \Return $N$
-                \end{algorithmic}
-            \end{algorithm}
-
+            \textbf{伪代码见算法\ref{0316:CheckHanoi}}
             }
         \end{parts}
     \end{solution}
 
+    \begin{algorithm}[!htp]
+        \caption{汉诺塔}\label{0319:Hanoi}
+        \begin{algorithmic}[1]
+            \Require {
+                三个栈$a, b, c$，
+                其中$a$中从栈顶到栈底为$0$到$n-1$共$n$个元素，$b,c$为空栈
+            }
+            \Procedure{Main}{}
+            \State\Call{Hanoi}{$a , b , c , n$}
+            \EndProcedure
+            \Statex
+            \Procedure{Hanoi}{$src , via , dst , n$}
+            \Statex
+            \Comment{解决以$via$为中介，从$src$的顶端移$n$个圆盘到$dst$上的汉诺塔问题}
+            \If{$n=1$}
+            \State $dst$.push($src$.pop()) \Comment{从$src$上取出最顶端的圆盘，放到$dst$上}
+            \Else
+            \State \Call{Hanoi}{$src , dst , via , n-1$}
+            \State \Call{Hanoi}{$src , via , dst , 1$}
+            \State \Call{Hanoi}{$via , src , dst , n-1$}
+            \EndIf
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
 
+    \begin{algorithm}[!htp]
+        \caption{检查汉诺塔状态}\label{0316:CheckHanoi}
+        \begin{algorithmic}[1]
+            \Require { 数组$p[0..n-1]$表示用上述算法解决$n$个圆盘的汉诺塔问题的一个中间状态 }
+            \Ensure { 到达这一状态经过的步数$N$，如果该状态非法则为$-1$ }
+            \State $src \gets 1, via \gets 2, dst \gets 3$
+            \State $N \gets 0$
+            \For {$i \gets n-1$ downto $0$}
+            \If {$p[i] = src$}
+            \State $N \gets 2N + 0$
+            \State \Call{Swap}{$dst, via$}
+            \ElsIf {$p[i] = dst$}
+            \State $N \gets 2N + 1$
+            \State \Call{Swap}{$src, via$}
+            \Else
+            \State \Return $-1$
+            \EndIf
+            \EndFor
+            \State \Return $N$
+        \end{algorithmic}
+    \end{algorithm}
 
     \question 课上的最大连续子序列是指和最大，如果要求是积最大呢？
 
@@ -185,60 +188,44 @@
         考虑乘积，在一个连续子序列后面加上一个元素时，既要考虑乘积绝对值的变化，也要考虑符号的变化。
         若符号在某一次运算后为负数，且后面还有一个负的元素，则后缀的乘积仍有机会变正并大于现有的最大值。
         考虑到这一因素，除了$MaxSuffix$以外，还需要一个$MinSuffix$以记录出现负元素时后缀乘积的情况，并按如下规则更新：
-        % \begin{table}[H]
-        %     \centering
-        %     \begin{tabular}{c|ccc}
-        %         \hline
-        %         $MinSuffix(i+1)$      & $x_{i+1} > 0$                                        & $x_{i+1} = 0$ & $x_{i+1} < 0$                                                                 \\
-        %         \hline
-        %         $MinSuffix(i) > 0$    & $\max{\left\{MinSuffix(i) \cdot x_{i+1}, 1\right\}}$ & $1$           & $MinSuffix(i) \cdot x_{i+1}$                                                  \\
-        %         $MinSuffix(i) < 0$    & $MinSuffix(i) \cdot x_{i+1}$                         & $1$           & $MinSuffix(i) \cdot x_{i+1}$                                                  \\
-        %         \hline
-        %         \hline
-        %         $MaxSuffix(i+1)$      &                                                      &               &                                                                               \\
-        %         \hline
-        %         $MaxSuffix(i) \geq 1$ & $\max{\left\{MaxSuffix(i) \cdot x_{i+1}, 1\right\}}$ & $1$           & $\max{\left\{MaxSuffix(i) \cdot x_{i+1}, MinSuffix(i) \cdot x_{i+1} \right\}}$ \\
-        %         \hline
-        %     \end{tabular}
-        % \end{table}
         \begin{itemize}
             \item $MaxSuffix = \max{\left\{MaxSuffix(i) \cdot x_{i+1}, MinSuffix(i) \cdot x_{i+1}, 1\right\}}$
             \item 当$MinSuffix(i) < 0$时，$MinSuffix(i+1) = MinSuffix(i) \cdot x_{i+1}$
             \item 当$MinSuffix > 0$时，$MinSuffix$应当总等于$MaxSuffix$
         \end{itemize}
 
-        \begin{algorithm}[H]
-            \caption{最大乘积连续子序列}
-            \begin{algorithmic}[1]
-                \Require { 序列$\left\{ x_i \right\}_{1 \leq i \leq n}$ }
-                \Ensure { 乘积最大的连续子序列的乘积$MaxProd$ }
-                \State $MaxProd \gets 1$ \Comment{最大子序列的乘积}
-                \State $MaxSuffix \gets 1, MinSuffix \gets 1$ \Comment{最大正后缀乘积、最小负后缀乘积}
-                \For {$i \gets 1$ to $n$}
-                \State $MaxSuffix \gets MaxSuffix \cdot x_i$
-                \State $MinSuffix \gets MinSuffix \cdot x_i$
-
-                \If {$MaxSuffix < 1$}
-                \State $MaxSuffix \gets 1$
-                \EndIf
-
-                \If {$MaxSuffix < MinSuffix$}
-                \State $MaxSuffix \gets MinSuffix$
-                \EndIf
-
-                \If {$MinSuffix \geq 0$}
-                \State $MinSuffix \gets MaxSuffix$
-                \EndIf
-
-                \If {$MaxSuffix > MaxProd$}
-                \State $MaxProd \gets MaxSuffix$
-                \EndIf
-                \EndFor
-            \end{algorithmic}
-        \end{algorithm}
+        \textbf{伪代码见算法\ref{0319:MaxProd}}
     \end{solution}
 
+    \begin{algorithm}[!htp]
+        \caption{最大乘积连续子序列}\label{0319:MaxProd}
+        \begin{algorithmic}[1]
+            \Require { 序列$\left\{ x_i \right\}_{1 \leq i \leq n}$ }
+            \Ensure { 乘积最大的连续子序列的乘积$MaxProd$ }
+            \State $MaxProd \gets 1$ \Comment{最大子序列的乘积}
+            \State $MaxSuffix \gets 1, MinSuffix \gets 1$ \Comment{最大正后缀乘积、最小负后缀乘积}
+            \For {$i \gets 1$ to $n$}
+            \State $MaxSuffix \gets MaxSuffix \cdot x_i$
+            \State $MinSuffix \gets MinSuffix \cdot x_i$
 
+            \If {$MaxSuffix < 1$}
+            \State $MaxSuffix \gets 1$
+            \EndIf
+
+            \If {$MaxSuffix < MinSuffix$}
+            \State $MaxSuffix \gets MinSuffix$
+            \EndIf
+
+            \If {$MinSuffix \geq 0$}
+            \State $MinSuffix \gets MaxSuffix$
+            \EndIf
+
+            \If {$MaxSuffix > MaxProd$}
+            \State $MaxProd \gets MaxSuffix$
+            \EndIf
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
 
     \question 背包问题中如果各种大小的物品的数量不限，那么如何知道背包是否能够恰好放满
 
@@ -248,41 +235,42 @@
     }
 
     \begin{solution}
-        记$s_0 = 0$，$P\left(K, S=\left\{s_1, s_2, \dots, s_n, s_0\right\}\right)$表示从$S$中选取物品是否能恰好装满一个大小为$K$的背包的问题。
-
-        则有$$
-            P(K, \left\{s_1, s_2, \dots, s_n, s_0\right\}) = \bigvee_{K-ms_n \geq 0, \atop m \geq 0} P(K - ms_n, \left\{s_1, \dots, s_{n-1}, s_0\right\})
-        $$
-        且$$
-            \forall S \supset \left\{s_0\right\},  P(0, S) = \mathsf{true} \quad\quad \forall K > 0, P(K,\left\{s_0\right\})=\mathsf{false}
-        $$
-
-        \begin{algorithm}[H]
-            \caption{物品数量不限的背包问题}
-            \begin{algorithmic}[1]
-                \Require { $K, S[1..n]$ }
-                \Ensure { 解是否存在 }
-                \State $P[0..n][0..K] \gets \left\{ \mathsf{false} \right\}$
-                \State $P[0][0] \gets \mathsf{true}$
-                \For{$k=0$ to $K$}
-                \For{$i=1$ to $n$}
-                \If{$P[i-1][k] = \mathsf{true}$}
-                \State $P[i][k] \gets \mathsf{true}$
-                \Else
-                \State $r \gets \left[ k \bmod s[i] \right]$
-                \While {$r < k$}
-                \If{$P[i][r] = \mathsf{true}$}
-                \State $P[i][k] \gets \mathsf{true}$
-                \State \textbf{break}
-                \EndIf
-                \State $r \gets r + k$
-                \EndWhile
-                \EndIf
-                \EndFor
-                \EndFor
-            \end{algorithmic}
-        \end{algorithm}
-
+        \[
+            P(n,K) = P(n - 1, K) || P(n, K - k_n)
+        \]
+        \textbf{伪代码见算法\ref{0316:pack}}
     \end{solution}
+
+    % \begin{solution}
+    %     记$s_0 = 0$，$P\left(K, S=\left\{s_1, s_2, \dots, s_n, s_0\right\}\right)$表示从$S$中选取物品是否能恰好装满一个大小为$K$的背包的问题。
+
+    %     则有$$
+    %         P(K, \left\{s_1, s_2, \dots, s_n, s_0\right\}) = \bigvee_{K-ms_n \geq 0, \atop m \geq 0} P(K - ms_n, \left\{s_1, \dots, s_{n-1}, s_0\right\})
+    %     $$
+    %     且$$
+    %         \forall S \supset \left\{s_0\right\},  P(0, S) = \mathsf{true} \quad\quad \forall K > 0, P(K,\left\{s_0\right\})=\mathsf{false}
+    %     $$
+
+    %     \textbf{伪代码见算法\ref{0316:pack}}
+    % \end{solution}
+
+    \begin{algorithm}[!htp]
+        \caption{物品数量不限的背包问题}\label{0316:pack}
+        \begin{algorithmic}[1]
+            \Require { $K, S[1..n]$ }
+            \Ensure { 解是否存在 }
+            \State $P[0..n][0..K] \gets \left\{ \mathsf{false} \right\}$
+            \State $P[0][0] \gets \mathsf{true}$
+            \For{$k=0$ to $K$}
+            \For{$i=1$ to $n$}
+            \If{$P[i-1][k] = \mathsf{true}$}
+            \State $P[i][k] \gets \mathsf{true}$
+            \ElsIf{ $ k - S[i] \ge 0 $ }
+            \State $P[i][k] \gets P[i][k-S[i]]$
+            \EndIf
+            \EndFor
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
 
 \end{questions}
