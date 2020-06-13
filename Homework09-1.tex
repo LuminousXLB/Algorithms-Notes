@@ -1,0 +1,99 @@
+\section{0413}\label{sec:0413}
+\begin{questions}\label{qset:0413}
+
+    \question 对于给定的二叉树，求其最小深度，即从根节点到最近的叶子的距离。
+
+    \begin{solution}
+        广度优先搜索最先到达的叶子节点有最小的深度。
+
+        最差情况下遍历了整棵树，时间复杂度为$O(N)$，其中$N$为节点的数量。
+
+        \textbf{伪代码见算法\ref{alg:0413:01}}
+    \end{solution}
+
+    \begin{algorithm}[!htp]
+        \caption{求二叉树的最小深度} \label{alg:0413:01}
+        \begin{algorithmic}[1]
+            \Require {$root$（给定二叉树的根节点）}
+            \Ensure {$mindepth$（二叉树中的最小深度）}
+            \State $q \gets \Call{Queue.Init}{}$
+            \State $\Call{Queue.Push}{q, \langle root, 0 \rangle}$
+            \While {$\neg \Call{Queue.isEmpty}{q}$}
+            \State $\langle current, depth \rangle \gets \Call{Queue.Pop}{q}$
+            \If {$current.isLeaf$} \Comment{当前节点是叶子节点}
+            \State \Return $depth$ \Comment{BFS最先到达的叶子节点有最小的深度}
+            \EndIf
+
+            \If {$current.left$} \Comment{左子树入队}
+            \State $\Call{Queue.Push}{q, \langle current.left, depth+1 \rangle}$
+            \EndIf
+
+            \If {$current.right$} \Comment{右子树入队}
+            \State $\Call{Queue.Push}{q, \langle current.right, depth+1 \rangle}$
+            \EndIf
+            \EndWhile
+        \end{algorithmic}
+    \end{algorithm}
+
+
+    \question 设$G$是有向非循环图，其所有路径最多含$k$条边。
+    设计线性时间算法，将所有顶点分为$k+1$组，每一组中任意两个点之间不存在路径。
+
+    \begin{solution}
+        DAG中一定存在入度为$0$的节点，且一定存在出度为$0$的节点，最长路径出现在入度为$0$的节点和出度为$0$的节点之间（否则可以沿两端点继续扩展路径，得到更长的路径）。
+
+        按照拓扑排序的顺序，删除DAG中入度为$0$的节点后，上述最长路径的长度一定减小$1$。
+        且在拓扑排序中同一批被移除的节点之间一定不存在路径（否则删除起点时，终点的入度一定不为0）。
+        因此可按照拓扑排序中删除节点的批次将所有节点分为$k+1$组，且每一组中任意两个节点之间不存在路径。
+
+        当图以出边邻接表给出时，算法的时间复杂度为$O(|V| + |E|)$。
+
+        \textbf{伪代码见算法\ref{alg:0413:02}}
+
+    \end{solution}
+
+    \begin{algorithm}[!htp]
+        \caption{拓扑分组} \label{alg:0413:02}
+        \begin{algorithmic}[1]
+            \Require {$G=(V,E)$（给定DAG的出边表）}
+            \Ensure {$vtop\left[1 \dots |V|\right], bnd$（$vtop\left[bnd[i] \dots bnd[i+1]\right]$中的节点不存在路径）}
+
+            \State $vtop \gets \Call{Vector.Init}{}, bnd \gets \Call{Vector.Init}{}$
+
+            \State $indeg \gets \Call{Array.Init}{$|V|, 0$}$  \Comment{构造入度表}
+            \For {$(v,w)$ in $E$}
+            \State $indeg[w] \gets indeg[w] + 1$
+            \EndFor
+
+            \For {$v$ in $V$ where $indeg[v] = 0$} \Comment{找到入度为$0$的节点}
+            \State $\Call{Vector.PushBack}{vtop, v}$
+            \EndFor
+
+            \Statex \Comment{拓扑排序}
+            \State $inf \gets 1, \Call{Vector.PushBack}{bnd, inf}$
+            \State $sup \gets \Call{Vector.size}{vtop}, \Call{Vector.PushBack}{bnd, sup}$
+            \While {$\Call{Vector.size}{vtop} < |V|$}
+            \For{$idx \gets inf$ to $sup$} \Comment{对于每一个上一阶段找到的入度为$0$的节点}
+            \For {$(v, w)$ in $E$ where $v = vtop[idx]$} \Comment{找到其后继节点}
+            \State $indeg[w] \gets indeg[w] - 1$ \Comment{减后继节点的入度}
+            \If{$indeg[w] = 0$} \Comment{并检查是否减到了$0$}
+            \State $\Call{Vector.PushBack}{vtop, w}$
+            \EndIf
+            \EndFor
+            \EndFor
+            \State $inf \gets sup + 1$
+            \State $sup \gets \Call{Vector.size}{vtop}, \Call{Vector.PushBack}{bnd, sup}$
+            \EndWhile
+        \end{algorithmic}
+    \end{algorithm}
+
+    \question 给定连通无向图$G$以及3条边$a,b,c$，在线性时间内判断$G$中是否存在一个包含$a$和$b$但不含$c$的闭链。
+
+    \begin{solution}
+        删除边$c$，在剩余的图中判断是否存在包含$a,b$的回路。
+
+        在剩余的无向图中划分双连通分支（线性时间），若$a,b$在同一个双连通分支里，则存在一条包含$a,b$但不包含$c$的回路。
+    \end{solution}
+
+\end{questions}
+
