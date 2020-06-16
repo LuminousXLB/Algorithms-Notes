@@ -32,19 +32,31 @@
 
     \begin{solution}
 
-        3-MAX-SAT问题的判定问题形式是$F$中能否有$k$个子句满足。
-        3-SAT问题是3-MAX-SAT问题的特例，即$k=m$，由于3-SAT问题是NP完全的，所以3-MAX-SAT问题也是NP完全的。
+        \textbf{
+            \color{red}
+            首先给出问题的判定问题形式，然后证明它是NP问题，再归约。
+        }
 
-        % 已知3SAT问题是NP完全问题，如果能将3SAT问题多项式归约到3-MAX-SAT问题，则3-MAX-SAT问题是NP完全问题。
 
-        % 假设存在一个算法$\mathcal{A}$可以解决3-MAX-SAT问题，
-        % \begin{itemize}
-        %     \item 应用该算法求解$\{x_i\}_n \gets \mathcal{A}(F)$ ，使得$F$中满足的子句数量最大
-        %     \item 计算$F(\{x_i\}_n)$，求出$F$中满足的子句的数量为$k$，该步骤的时间复杂度为$O(m)$
-        %     \item 因为CNF满足的条件是其所有子句同时为真，所以$F$为真等价于$k=m$，该步骤的时间复杂度为$O(1)$
-        % \end{itemize}
+        \begin{parts}
+            \part {
+                3-MAX-SAT问题的判定问题形式是$F$中能否有$k$个子句满足。
+            }
+            \part {
+                对于任意一组$x_1,x_2, \dots ,x_n$的值，可以通过逐个计算$m$个子句的值并对满足的子句计数，判断是否有$k$个子句满足。
+                时间复杂度为$O(m)$。
+            }
+            \part {
+                假设存在一个算法$\mathcal{A}(F,k)$可以解决3-MAX-SAT问题的判定问题形式，
+                \begin{itemize}
+                    \item 应用该算法求解$\{x_i\}_n \gets \mathcal{A}(F, m)$
+                    \item 则$\{x_i\}_n$能使$F$中所有子句同时为真
+                \end{itemize}
+                因此3SAT问题可以多项式归约到3-MAX-SAT问题。
+            }
+        \end{parts}
 
-        % 因此3SAT问题可以多项式归约到3-MAX-SAT问题。
+        % 3-SAT问题是3-MAX-SAT问题的特例，即$k=m$，由于3-SAT问题是NP完全的，所以3-MAX-SAT问题也是NP完全的。
 
     \end{solution}
 
