@@ -102,6 +102,14 @@
     \question  证明Graham算法是求凸包问题的一种最优算法
 
     \begin{solution}
+
+        \textbf{CONFUSED}
+
+        将排序问题归约到凸包问题，以此证明凸包问题的下界是$\Omega(n)$
+
+    \end{solution}
+
+    \begin{solution}
         在$n$个点中选取$k$个点按一定顺序构成凸包，可能有$P(n, k)$种结果。
         由于$k$是未知的，所以共有\[
             \sum_{k = 3}^{n} P(n,k)
@@ -126,6 +134,48 @@
 
     \question 证明如果存在时间复杂度为$O(T(n))$的两个$n \times n$下三角矩阵的乘法，
     则存在时间复杂度为$O(T(n)+n^2)$的任意两个$n \times n$矩阵相乘的算法。
+
+    \begin{solution}
+        $$A \rightarrow
+            \left(
+            \begin{array}{ccc}
+                    0 & 0 & 0 \\
+                    A & 0 & 0 \\
+                    A & A & 0
+                \end{array}
+            \right), B \rightarrow
+            \left(
+            \begin{array}{ccc}
+                    0 & 0 & 0 \\
+                    B & 0 & 0 \\
+                    B & B & 0
+                \end{array}
+            \right)
+        $$
+        \[
+            \left(
+            \begin{array}{ccc}
+                    0 & 0 & 0 \\
+                    A & 0 & 0 \\
+                    A & A & 0
+                \end{array}
+            \right)
+            \left(
+            \begin{array}{ccc}
+                    0 & 0 & 0 \\
+                    B & 0 & 0 \\
+                    B & B & 0
+                \end{array}
+            \right)=
+            \left(
+            \begin{array}{ccc}
+                    0   & 0 & 0 \\
+                    0   & 0 & 0 \\
+                    A B & 0 & 0
+                \end{array}
+            \right)
+        \]
+    \end{solution}
 
     \begin{solution}
         令$E$为$n$阶单位阵。设$A,B,C$均为$n$阶方阵，且$C = AB$。
